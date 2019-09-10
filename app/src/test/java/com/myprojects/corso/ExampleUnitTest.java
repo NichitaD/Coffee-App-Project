@@ -1,4 +1,4 @@
-package com.example.wert;
+package com.myprojects.corso;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.wert;
+package com.myprojects.corso;
 
 public class User {
 

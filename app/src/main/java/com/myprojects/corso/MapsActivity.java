@@ -1,4 +1,4 @@
-package com.example.wert;
+package com.myprojects.corso;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -18,9 +18,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
-import com.example.wert.services.LocationTracker;
+import com.myprojects.corso.services.LocationTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,14 +34,28 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
+import com.google.maps.internal.PolylineEncoding;
+import com.google.maps.model.DirectionsLeg;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
+        ,GoogleMap.OnInfoWindowClickListener {
 
     int ERROR_DIALOG_REQUEST = 1;
     final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
@@ -46,20 +63,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_UPDATE_INTERVAL = 3000;
     private int locationUpdateNumber = 1;
     private boolean mLocationPermissionGranted = false;
+    private String info = " Click to determine route ";
     private static final String TAG = "MapsActivityLog : ";
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Handler mHandler = new Handler();
     private Runnable mRunnable;
-    public Marker MyLocation;
     public LatLng myLocation;
     private LocationTracker locationTracker = new LocationTracker();
-
+    private GeoApiContext mGeoApiContext = null;
+    private Polyline oldPolyline;
+    private Marker selectedMarker;
 
     //////// Creating some fake Coffee Shops,
 
-    CoffeeShop fiveToGo = new CoffeeShop("5 to go", new LatLng(46.544868,24.560155));
-    CoffeeShop captainBean = new CoffeeShop("Captain Bean", new LatLng(46.5420565,24.5542164));
+    CoffeeShop fiveToGo = new CoffeeShop("5 to go", new LatLng(46.544868, 24.560155));
+    CoffeeShop captainBean = new CoffeeShop("Captain Bean", new LatLng(46.5420565, 24.5542164));
     CoffeeShop roots = new CoffeeShop("Roots", new LatLng(46.5436924, 24.5359489));
 
     ///// Creating the map activity
@@ -72,15 +91,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        final ImageButton button =  findViewById(R.id.reset);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                resetMap(oldPolyline, selectedMarker);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(checkMapServices()){
-            if(mLocationPermissionGranted){
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
                 getDeviceLocation();
-            } else{
+            } else {
                 buildAlertMessageNoGps();
             }
         }
@@ -89,22 +114,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
         customizeMap(googleMap);
+        mMap.setOnInfoWindowClickListener(this);
 
+        if(mGeoApiContext == null){
+            mGeoApiContext = new GeoApiContext.Builder().
+                    apiKey("AIzaSyAh_mnkmplWNTxhFwUAZuj-WqlZ-oMIn0s")
+                    .build();
+        }
         if (checkMapServices()) {
             getDeviceLocation();
             startLocationService();
 
             Marker FiveToGo = mMap.addMarker(new MarkerOptions().position(fiveToGo.getPosition())
-                   .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee",135,127)))
-                    .title(fiveToGo.getName()));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                    .title(fiveToGo.getName())
+                    .snippet(info));
             Marker CaptainBean = mMap.addMarker(new MarkerOptions().position(captainBean.getPosition())
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee",135,127)))
-                    .title(captainBean.getName()));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                    .title(captainBean.getName())
+                    .snippet(info));
             Marker Roots = mMap.addMarker(new MarkerOptions().position(roots.getPosition())
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee",135,127)))
-                    .title(roots.getName()));
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                    .title(roots.getName())
+                    .snippet(info));
             mMap.setMyLocationEnabled(true);
         }
     }
@@ -112,17 +146,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ////// Requesting Permission
 
     public boolean isServicesOK() {
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable( MapsActivity.this );
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MapsActivity.this);
         if (available == ConnectionResult.SUCCESS) {
-            Log.d( TAG, "isServicesOK: Google Play Services is working" );
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
-        } else if (GoogleApiAvailability.getInstance().isUserResolvableError( available )) {
-            Log.d( TAG, "isServicesOK: an error occurred but we can fix it" );
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.d(TAG, "isServicesOK: an error occurred but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog
-                    ( MapsActivity.this, available,ERROR_DIALOG_REQUEST );
+                    (MapsActivity.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
         } else {
-            Toast.makeText( this, "You can't make map requests", Toast.LENGTH_SHORT ).show();
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
@@ -138,7 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return true;
     }
 
-    private  void buildAlertMessageNoGps() {
+    private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("This app requires GPS, do you want to enable it?")
                 .setCancelable(false)
@@ -185,7 +219,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
-            case  PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if (mLocationPermissionGranted) {
                     getDeviceLocation();
                 } else {
@@ -195,9 +229,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private boolean checkMapServices(){
-        if(isServicesOK()){
-            if(isMapsEnabled()){
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            if (isMapsEnabled()) {
                 return true;
             }
         }
@@ -218,14 +252,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location " + locationUpdateNumber);
                             ++locationUpdateNumber;
-                            Location currentLocation = (Location)task.getResult();
-                            if(currentLocation != null) {
+                            Location currentLocation = (Location) task.getResult();
+                            if (currentLocation != null) {
                                 Log.d(TAG, currentLocation.toString());
                                 myLocation = (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));    // location
-                                MyLocation = mMap.addMarker(new MarkerOptions().position(myLocation)   // Marker
-                                        .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("placeholder", 60, 65)))
-                                        .title("Your location!"));
-                                moveCamera(myLocation);
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,12.5f));
                             }
                             startUserLocationsRunnable();
                         } else {
@@ -241,27 +272,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void moveCamera (LatLng location) {
+    public void moveCamera(LatLng location) {
         String pozitie = location.toString();
         Log.d(TAG, pozitie);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,13f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12.5f));
     }
 
     //////////Initiating location service
 
-    private void startLocationService(){
-        if(!isLocationServiceRunning()){
+    private void startLocationService() {
+        if (!isLocationServiceRunning()) {
             Intent serviceIntent = new Intent(this, LocationTracker.class);
 
-                Log.d(TAG, " starting service");
-                this.startService(serviceIntent);
+            Log.d(TAG, " starting service");
+            this.startService(serviceIntent);
         }
     }
 
     private boolean isLocationServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("com.codingwithmitch.googledirectionstest.services.LocationService".equals(service.service.getClassName())) {
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("com.codingwithmitch.googledirectionstest.services.LocationService".equals(service.service.getClassName())) {
                 Log.d(TAG, "isLocationServiceRunning: location service is already running.");
                 return true;
             }
@@ -272,7 +303,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ///////// Updating Location
 
-    private void startUserLocationsRunnable(){
+    private void startUserLocationsRunnable() {
         Log.d(TAG, "startUserLocationsRunnable: starting runnable for retrieving updated locations.");
         mHandler.postDelayed(mRunnable = new Runnable() {
             @Override
@@ -285,16 +316,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void updateMyLocation() {
-          Log.d(TAG, "Managed to obtain updated location :" + locationTracker.getUpdatedLocation());
-          myLocation =  locationTracker.getUpdatedLocation();
-          Log.d(TAG, "Setting location to" + myLocation);
-          MyLocation.setPosition(myLocation);
+        Log.d(TAG, "Managed to obtain updated location :" + locationTracker.getUpdatedLocation());
+        myLocation = locationTracker.getUpdatedLocation();
+        Log.d(TAG, "Setting location to" + myLocation);
 
     }
 
     /////// Adding a custom map
 
-    private void customizeMap(GoogleMap googleMap){
+    private void customizeMap(GoogleMap googleMap) {
         try {
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -310,8 +340,146 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /////// Creating a BitMapDescriptor for the custom coffee icon
 
-    public Bitmap resizeBitmap(String drawableName,int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(drawableName, "drawable", getPackageName()));
+    public Bitmap resizeBitmap(String drawableName, int width, int height) {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(drawableName, "drawable", getPackageName()));
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false);
     }
+
+
+    ///// Making the route dialog popup
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Display route?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        calculateDirections(marker);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /////// Calculating Directions
+
+    private void calculateDirections(Marker marker){
+        Log.d(TAG, "calculateDirections: calculating directions.");
+
+        com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
+                marker.getPosition().latitude,
+                marker.getPosition().longitude
+        );
+        DirectionsApiRequest directions = new DirectionsApiRequest(mGeoApiContext);
+
+        directions.alternatives(false);
+        directions.origin(
+                new com.google.maps.model.LatLng(
+                       myLocation.latitude,
+                       myLocation.longitude
+                )
+        );
+        Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+        directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
+            @Override
+            public void onResult(DirectionsResult result) {
+                addPolylinesToMap(result, marker);
+            }
+
+
+            @Override
+            public void onFailure(Throwable e) {
+                Log.e(TAG, "calculateDirections: Failed to get directions: " + e.getMessage() );
+
+            }
+        });
+    }
+
+    ////// Adding polylines
+
+    private void addPolylinesToMap(final DirectionsResult result, Marker marker){
+        selectedMarker = marker;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: result routes: " + result.routes.length);
+                if(oldPolyline != null){
+                    oldPolyline.remove();
+                }
+                for(DirectionsRoute route: result.routes){
+                    Log.d(TAG, "run: leg: " + route.legs[0].toString());
+                    addInfoWindow(route.legs[0], marker );
+                    List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
+
+                    List<LatLng> newDecodedPath = new ArrayList<>();
+
+                    // This loops through all the LatLng coordinates of ONE polyline.
+                    for(com.google.maps.model.LatLng latLng: decodedPath){
+
+//                        Log.d(TAG, "run: latlng: " + latLng.toString());
+
+                        newDecodedPath.add(new LatLng(
+                                latLng.lat,
+                                latLng.lng
+                        ));
+                    }
+                    Polyline polyline = mMap.addPolyline(new PolylineOptions().addAll(newDecodedPath));
+                    oldPolyline = polyline;
+                    polyline.setColor(R.color.red);
+                    polyline.setWidth(16.5f);
+                    zoomRoute(polyline.getPoints());
+                }
+            }
+        });
+    }
+
+    ////// Adding a InfoWindow for trip
+
+    private void addInfoWindow (DirectionsLeg legs, Marker marker){
+       Log.d("INFO" , "Changing snippet");
+        marker.hideInfoWindow();
+        marker.setSnippet("Trip distance: " + legs.distance);
+        marker.showInfoWindow();
+
+    }
+
+    //////Setting the view on the route
+
+
+    public void zoomRoute(List<LatLng> lstLatLngRoute) {
+
+        if (mMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
+
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (LatLng latLngPoint : lstLatLngRoute)
+            boundsBuilder.include(latLngPoint);
+
+        int routePadding = 120;
+        LatLngBounds latLngBounds = boundsBuilder.build();
+
+        mMap.animateCamera(
+                CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding),
+                600,
+                null
+        );
+    }
+
+    ////// Reseting map
+
+    private void resetMap (Polyline polilyne, Marker marker){
+
+        polilyne.remove();
+        marker.hideInfoWindow();
+        marker.setSnippet("Click to determine route");
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,12.5f));
+
+    }
 }
+

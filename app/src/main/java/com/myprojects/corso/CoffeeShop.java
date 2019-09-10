@@ -1,4 +1,4 @@
-package com.example.wert;
+package com.myprojects.corso;
 
 import com.google.android.gms.maps.model.LatLng;
 
