@@ -7,19 +7,17 @@
         android:icon="@mipmap/coffee_icon"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:label="MOKA"
         android:theme="@style/AppTheme">
         <activity android:name=".MenuActivity"></activity>
-        <activity
-            android:name=".LoginActivity">
+        <activity android:name=".LoginActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-    </activity>
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-
+        </activity>
+        <activity android:name=".MapsActivity"
+                  android:label="@string/title_activity_maps">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -29,20 +27,16 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+                   android:value="@string/google_maps_key" />
 
-        <service
-            android:name=".services.LocationTracker"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="true" />
+        <service android:name=".services.LocationTracker"
+                 android:enabled="true"
+                 android:exported="true"
+                 android:stopWithTask="true" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
 </manifest>

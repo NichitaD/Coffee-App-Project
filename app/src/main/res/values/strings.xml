@@ -78,5 +78,7 @@
 
         <string name="id_fmt">User ID: %s</string>
         <string name="email_fmt">Email: %s</string>
-    </resources>
+    <string name="option_all">Show all coffeshops in town</string>
+    <string name="option_near">Show nearest coffeeshop</string>
+</resources>
 

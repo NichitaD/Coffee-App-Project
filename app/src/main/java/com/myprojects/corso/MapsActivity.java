@@ -23,6 +23,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.myprojects.corso.services.LocationTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -65,6 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean mLocationPermissionGranted = false;
     private String info = " Click to determine route ";
     private static final String TAG = "MapsActivityLog : ";
+    private String marker_name;
+    private GeoPoint marker_geo_point;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Handler mHandler = new Handler();
@@ -74,12 +88,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GeoApiContext mGeoApiContext = null;
     private Polyline oldPolyline;
     private Marker selectedMarker;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    //////// Creating some fake Coffee Shops,
-
-    CoffeeShop fiveToGo = new CoffeeShop("5 to go", new LatLng(46.544868, 24.560155));
-    CoffeeShop captainBean = new CoffeeShop("Captain Bean", new LatLng(46.5420565, 24.5542164));
-    CoffeeShop roots = new CoffeeShop("Roots", new LatLng(46.5436924, 24.5359489));
 
     ///// Creating the map activity
 
@@ -91,10 +101,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        setMarkers();
         final ImageButton button =  findViewById(R.id.reset);
+        button.setEnabled(false);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 resetMap(oldPolyline, selectedMarker);
+                button.setEnabled(false);
             }
         });
     }
@@ -126,19 +139,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (checkMapServices()) {
             getDeviceLocation();
             startLocationService();
-
-            Marker FiveToGo = mMap.addMarker(new MarkerOptions().position(fiveToGo.getPosition())
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
-                    .title(fiveToGo.getName())
-                    .snippet(info));
-            Marker CaptainBean = mMap.addMarker(new MarkerOptions().position(captainBean.getPosition())
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
-                    .title(captainBean.getName())
-                    .snippet(info));
-            Marker Roots = mMap.addMarker(new MarkerOptions().position(roots.getPosition())
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
-                    .title(roots.getName())
-                    .snippet(info));
             mMap.setMyLocationEnabled(true);
         }
     }
@@ -256,7 +256,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (currentLocation != null) {
                                 Log.d(TAG, currentLocation.toString());
                                 myLocation = (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));    // location
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,12.5f));
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,14f));
                             }
                             startUserLocationsRunnable();
                         } else {
@@ -272,11 +272,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void moveCamera(LatLng location) {
-        String pozitie = location.toString();
-        Log.d(TAG, pozitie);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12.5f));
-    }
 
     //////////Initiating location service
 
@@ -391,6 +386,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onResult(DirectionsResult result) {
                 addPolylinesToMap(result, marker);
+                findViewById(R.id.reset).setEnabled(true);
             }
 
 
@@ -478,8 +474,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polilyne.remove();
         marker.hideInfoWindow();
         marker.setSnippet("Click to determine route");
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,12.5f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,14f));
 
+    }
+
+    ///// Adding the markers from the database
+
+    private void setMarkers() {
+        CollectionReference ref = db.collection("coffee_shops");
+        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        marker_name=(String) document.get("name");
+                        marker_geo_point = (GeoPoint) document.get("location");
+                        Log.d("Marker_info", "Setting marker " + marker_name + " to " + marker_geo_point);
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(marker_geo_point.getLatitude(),marker_geo_point.getLongitude()))
+                                .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                                .title(marker_name)
+                                .snippet(info));
+                    }
+                } else {
+                    Log.d("Database_info", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void nearestLocation() {
     }
 }
 

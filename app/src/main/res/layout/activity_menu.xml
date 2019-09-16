@@ -6,27 +6,57 @@
     android:layout_height="match_parent"
     android:background="@color/blueFrey">
 
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/ThemeOverlay.FirebaseIcon"
+        android:layout_width="200dp"
+        android:layout_height="148dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/coffee_icon"
+        app:layout_constraintBottom_toTopOf="@+id/near_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
     <Button
         android:id="@+id/near_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="162dp"
         android:layout_marginEnd="162dp"
-        android:layout_marginBottom="54dp"
-        android:text="Show nearest coffeeshop"
-        app:layout_constraintBottom_toTopOf="@+id/all_button"
+        android:layout_marginBottom="120dp"
+        android:text="@string/option_near"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/all_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="159dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="164dp"
-        android:layout_marginBottom="278dp"
-        android:text="Show all coffeshops in town"
+        android:text="@string/option_all"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/signOut"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_out"
+        android:theme="@style/ThemeOverlay.MyDarkButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_button"
+        app:layout_constraintVertical_bias="0.506" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
