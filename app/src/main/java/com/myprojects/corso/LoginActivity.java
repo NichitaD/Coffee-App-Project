@@ -3,7 +3,6 @@ package com.myprojects.corso;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,7 +24,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView mStatusTextView;
     private EditText mEmailField;
     private EditText mPasswordField;
-
     private FirebaseAuth mAuth;
 
     @Override
@@ -38,14 +35,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mStatusTextView = findViewById(R.id.status);
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
-
-
         // Buttons
         findViewById(R.id.emailSignInButton).setOnClickListener(this);
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
         findViewById(R.id.signOutButton).setOnClickListener(this);
         findViewById(R.id.verifyEmailButton).setOnClickListener(this);
-
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -61,9 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!validateForm()) {
             return;
         }
-
         showProgressDialog();
-
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -81,7 +73,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
-
                         // [START_EXCLUDE]
                         hideProgressDialog();
                         // [END_EXCLUDE]
@@ -95,9 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!validateForm()) {
             return;
         }
-
         showProgressDialog();
-
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -116,14 +105,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
-
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
                             mStatusTextView.setText(R.string.auth_failed);
                         }
                         hideProgressDialog();
                         // [END_EXCLUDE]
-
                     }
                 });
         // [END sign_in_with_email]
@@ -141,7 +128,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void sendEmailVerification() {
         // Disable button
         findViewById(R.id.verifyEmailButton).setEnabled(false);
-
         // Send verification email
         // [START send_email_verification]
         final FirebaseUser user = mAuth.getCurrentUser();
@@ -171,7 +157,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean validateForm() {
         boolean valid = true;
-
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
             mEmailField.setError("Required.");
@@ -187,14 +172,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             mPasswordField.setError(null);
         }
-
         return valid;
     }
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-
             if(!user.isEmailVerified()) {
                 mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
                         user.getEmail(), user.isEmailVerified()));
@@ -245,7 +228,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
         }
-
         mProgressDialog.show();
     }
 

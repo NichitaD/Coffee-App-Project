@@ -1,5 +1,6 @@
 package com.myprojects.corso;
 
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.model.TravelMode;
 import com.myprojects.corso.services.LocationTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -88,8 +90,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GeoApiContext mGeoApiContext = null;
     private Polyline oldPolyline;
     private Marker selectedMarker;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Float testDistance;
+    private Float closestDistance = new Float(12345678);
+    private String nearestName;
+    private LatLng nearestLocation;
+    private Location testLocation = new Location("");
+    private final Location mine = new Location("");
+    private int option;
 
     ///// Creating the map activity
 
@@ -101,7 +109,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        setMarkers();
+        Intent intent = getIntent();
+        option = intent.getIntExtra("option", 123);
+        Log.d("Intent_info", "Recieved option : " + option);
+        if (option == 2) {
+            setAllMarkers();
+        }
         final ImageButton button =  findViewById(R.id.reset);
         button.setEnabled(false);
         button.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +212,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
@@ -213,7 +225,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -228,7 +239,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
     private boolean checkMapServices() {
         if (isServicesOK()) {
             if (isMapsEnabled()) {
@@ -257,6 +267,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Log.d(TAG, currentLocation.toString());
                                 myLocation = (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));    // location
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,14f));
+                                if (option == 1){
+                                    setNearestMarker();
+                                }
                             }
                             startUserLocationsRunnable();
                         } else {
@@ -271,7 +284,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG, "getDeviceLocation : Security Exception: " + e.getMessage());
         }
     }
-
 
     //////////Initiating location service
 
@@ -314,7 +326,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "Managed to obtain updated location :" + locationTracker.getUpdatedLocation());
         myLocation = locationTracker.getUpdatedLocation();
         Log.d(TAG, "Setting location to" + myLocation);
-
     }
 
     /////// Adding a custom map
@@ -340,8 +351,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false);
     }
 
-
     ///// Making the route dialog popup
+
     @Override
     public void onInfoWindowClick(Marker marker) {
 
@@ -375,6 +386,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DirectionsApiRequest directions = new DirectionsApiRequest(mGeoApiContext);
 
         directions.alternatives(false);
+        directions.mode(TravelMode.WALKING);
         directions.origin(
                 new com.google.maps.model.LatLng(
                        myLocation.latitude,
@@ -388,12 +400,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 addPolylinesToMap(result, marker);
                 findViewById(R.id.reset).setEnabled(true);
             }
-
-
             @Override
             public void onFailure(Throwable e) {
                 Log.e(TAG, "calculateDirections: Failed to get directions: " + e.getMessage() );
-
             }
         });
     }
@@ -448,7 +457,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //////Setting the view on the route
 
-
     public void zoomRoute(List<LatLng> lstLatLngRoute) {
 
         if (mMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
@@ -480,7 +488,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ///// Adding the markers from the database
 
-    private void setMarkers() {
+    private void setAllMarkers() {
         CollectionReference ref = db.collection("coffee_shops");
         ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 
@@ -503,7 +511,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void nearestLocation() {
+    private void setNearestMarker() {
+        mine.setLongitude(myLocation.longitude);
+        mine.setLatitude(myLocation.latitude);
+        CollectionReference ref = db.collection("coffee_shops");
+        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        marker_geo_point = (GeoPoint) document.get("location");
+                        testLocation.setLatitude(marker_geo_point.getLatitude());
+                        testLocation.setLongitude(marker_geo_point.getLongitude());
+                        testDistance = mine.distanceTo(testLocation);
+                        if(testDistance < closestDistance){
+                            closestDistance = testDistance;
+                            nearestName = (String) document.get("name");
+                            nearestLocation = new LatLng(testLocation.getLatitude(), testLocation.getLongitude());
+                        }
+                    }
+                } else {
+                    Log.d("Database_info", "Error getting documents: ", task.getException());
+                }
+                calculateDirections (mMap.addMarker(new MarkerOptions().position(nearestLocation)
+                        .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                        .title(nearestName)
+                        .snippet(info)));
+            }
+        });
     }
 }
 
