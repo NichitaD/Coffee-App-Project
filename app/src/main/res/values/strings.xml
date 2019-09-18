@@ -1,4 +1,5 @@
 <resources>
+    <string name="register_button">Register</string>
     <string name="app_name">CoffeeApp</string>
     <string name="title_activity_maps">CoffeeApp</string>
     <string name="title_activity_login">Sign in</string>
@@ -46,6 +47,7 @@
         <string name="status_verification_succeeded">Verification succeeded</string>
         <string name="status_sign_in_failed">Sign-in failed</string>
         <string name="instant_validation">(instant validation)</string>
+        <string name="register">Register</string>
 
         <string name="firebase_status_fmt">Firebase User: %s</string>
         <string name="firebase_user_management">Firebase User Management</string>
@@ -57,7 +59,7 @@
         <string name="facebook_title_text">Facebook Login</string>
 
         <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
-        <string name="emailpassword_title_text">Welcome to MOKA!</string>
+        <string name="emailpassword_title_text">Welcome to MOKKA!</string>
 
         <string name="passwordless_status_fmt">Email User: %1$s (verified: %2$b)</string>
         <string name="passwordless_title_text">Passwordless Sign In</string>

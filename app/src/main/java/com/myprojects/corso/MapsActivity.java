@@ -524,6 +524,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         testLocation.setLatitude(marker_geo_point.getLatitude());
                         testLocation.setLongitude(marker_geo_point.getLongitude());
                         testDistance = mine.distanceTo(testLocation);
+                        Log.d("Comparing","From " + mine + "to :" + testLocation + "=" + testDistance);
                         if(testDistance < closestDistance){
                             closestDistance = testDistance;
                             nearestName = (String) document.get("name");

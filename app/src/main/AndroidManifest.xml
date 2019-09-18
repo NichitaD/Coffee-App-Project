@@ -7,9 +7,10 @@
         android:icon="@mipmap/coffee_icon"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:label="MOKA"
+        android:label="MOKKA"
         android:theme="@style/AppTheme">
         <activity android:name=".MenuActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".LoginActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
