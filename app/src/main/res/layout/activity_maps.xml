@@ -19,7 +19,7 @@
         android:layout_width="37.2dp"
         android:layout_height="37.2dp"
         android:src="@drawable/outer"
-        android:background="@drawable/button_background"
+        android:background="@drawable/out_button_background"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"

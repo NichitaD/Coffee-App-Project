@@ -5,117 +5,190 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blueFrey">
+    android:background="@drawable/blurred">
 
     <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView4"
+        android:layout_width="188dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="24dp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="@string/emailpassword_title_text"
-        android:textSize="40sp"
-        style="@style/ThemeOverlay.MyTextDetail"
-        app:layout_constraintBottom_toTopOf="@+id/icon"
+        android:layout_marginBottom="32dp"
+        android:text="Find your coffee."
+        android:textColor="#0E0101"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/image_card"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <ImageView
-        android:id="@+id/icon"
-        style="@style/ThemeOverlay.FirebaseIcon"
-        android:layout_width="200dp"
-        android:layout_height="148dp"
-        android:layout_below="@id/titleText"
-        android:layout_centerHorizontal="true"
-        android:src="@mipmap/coffee_icon"
-        app:layout_constraintBottom_toTopOf="@+id/status"
+        android:id="@+id/image_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"></ImageView>
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:srcCompat="@drawable/coffee_simple" />
 
     <TextView
-        android:id="@+id/status"
-        style="@style/ThemeOverlay.MyTextDetail"
-        android:layout_marginTop="12dp"
-        android:text="@string/signed_out"
-        app:layout_constraintBottom_toTopOf="@+id/fieldEmail"
+        android:id="@+id/textView3"
+        android:layout_width="274dp"
+        android:layout_height="87dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/alef_bold"
+        android:text="MOKKA"
+        android:textColor="#130101"
+        android:textSize="70dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/icon" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55" />
 
-    <EditText
-        android:id="@+id/fieldEmail"
-        android:layout_width="0dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:hint="@string/hint_email"
-        android:inputType="textEmailAddress"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/fieldPassword"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#CCFFFF"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.528"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        app:layout_constraintTop_toBottomOf="@+id/image_card"
+        app:layout_constraintVertical_bias="0.0">
 
-    <EditText
-        android:id="@+id/fieldPassword"
-        android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cardview_body"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                app:srcCompat="@drawable/baseline_mail_black_24dp" />
+
+            <EditText
+                android:id="@+id/fieldEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/black"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textColorHint="#010005"
+                android:textStyle="bold" />
+
+
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="20dp"
-        android:layout_weight="1"
-        android:hint="@string/hint_password"
-        android:inputType="textPassword"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/emailSignInButton"
+        android:layout_marginBottom="200dp"
+        android:backgroundTint="#CCFFFF"
+        android:outlineSpotShadowColor="@color/blue"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldEmail" />
+        app:layout_constraintTop_toBottomOf="@id/cardView2">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cardview_body">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                app:srcCompat="@drawable/baseline_lock_black_24dp" />
+
+            <EditText
+                android:id="@+id/fieldPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/black"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textColorHint="#000103"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/emailSignInButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="12dp"
-        android:text="@string/sign_in"
-        android:theme="@style/ThemeOverlay.MyDarkButton"
-        app:layout_constraintBottom_toTopOf="@+id/emailCreateAccountButton"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_back"
+        android:fontFamily="sans-serif-black"
+        android:text="Log In"
+        android:textColor="#421442"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
 
-    <Button
-        android:id="@+id/emailCreateAccountButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="120dp"
-        android:layout_weight="0"
-        android:text="@string/register_button"
-        android:theme="@style/ThemeOverlay.MyDarkButton"
+        android:layout_marginBottom="81dp"
+        android:text="OR"
+        android:textColor="#EEEDED"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailSignInButton" />
+
+    <Button
+        android:id="@+id/emailCreateAccountButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/button_back"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/register"
+        android:textColor="#3C193C"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 
 
 

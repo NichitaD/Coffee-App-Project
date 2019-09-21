@@ -92,7 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker selectedMarker;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Float testDistance;
-    private Float closestDistance = new Float(12345678);
+    private Float closestDistance = new Float(123456789);
     private String nearestName;
     private LatLng nearestLocation;
     private Location testLocation = new Location("");

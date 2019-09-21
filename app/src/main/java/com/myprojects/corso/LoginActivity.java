@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_login);
         // Views
-        mStatusTextView = findViewById(R.id.status);
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
         // Buttons
@@ -149,8 +148,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
                 LoginActivity.this.startActivity(myIntent);
             }
-        } else {
-            mStatusTextView.setText(R.string.signed_out);
         }
     }
 

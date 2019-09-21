@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/alef_bold</item>
+        <item>@font/alegreya_sans_sc_bold</item>
+        <item>@font/anton</item>
+        <item>@font/baloo_thambi</item>
+        <item>@font/bevan</item>
+        <item>@font/bowlby_one_sc</item>
+        <item>@font/bree_serif</item>
+        <item>@font/doppio_one</item>
+    </array>
+</resources>
