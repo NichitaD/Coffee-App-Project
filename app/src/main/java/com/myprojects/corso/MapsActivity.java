@@ -15,16 +15,24 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,13 +71,13 @@ import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
-
+import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
-        ,GoogleMap.OnInfoWindowClickListener {
+        ,GoogleMap.OnInfoWindowClickListener, View.OnClickListener {
 
     int ERROR_DIALOG_REQUEST = 1;
     final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
@@ -77,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_UPDATE_INTERVAL = 3000;
     private int locationUpdateNumber = 1;
     private boolean mLocationPermissionGranted = false;
-    private String info = " Click to determine route ";
+    private String info = " Click for more info";
     private static final String TAG = "MapsActivityLog : ";
     private String marker_name;
     private GeoPoint marker_geo_point;
@@ -98,6 +106,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location testLocation = new Location("");
     private final Location mine = new Location("");
     private int option;
+    private Marker current_clicked_marker;
+    private Dialog dialog;
+
 
     ///// Creating the map activity
 
@@ -355,30 +366,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Display route?")
-                .setCancelable(true)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        calculateDirections(marker);
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final Dialog dialog1 = new Dialog(this);
+        Window window = dialog1.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        wlp.y = 50;
+        window.setAttributes(wlp);
+        View view1 = inflater.inflate(R.layout.bottom_window, null);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog1.setContentView(view1);
+        TextView title = view1.findViewById(R.id.coffee_name);
+        title.setText(marker.getTitle());
+        ImageView rating_bar = view1.findViewById(R.id.rating_bar);
+        rating_bar.setImageResource(R.drawable.five_starts);
+        dialog1.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog1.show();
+        current_clicked_marker = marker;
+        dialog = dialog1;
     }
+
+    @Override
+    public void onClick(View view) {
+        int button = view.getId();
+        if (button == R.id.directions_button){
+            LayoutInflater inflater = LayoutInflater.from(this);
+            final Dialog dialog2 = new Dialog(this);
+            Window window = dialog2.getWindow();
+            WindowManager.LayoutParams wlp = window.getAttributes();
+            wlp.gravity = Gravity.CENTER;
+            wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            wlp.y = 50;
+            window.setAttributes(wlp);
+            View view1 = inflater.inflate(R.layout.travel_dialog, null);
+            dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.dismiss();
+            dialog = dialog2;
+            dialog2.setContentView(view1);
+            dialog2.show();
+        }
+        if (button == R.id.walk){
+            calculateDirections(current_clicked_marker, 2);
+            dialog.dismiss();
+        }
+        if (button == R.id.car){
+            calculateDirections(current_clicked_marker, 1);
+            dialog.dismiss();
+        }
+        if (button == R.id.bike){
+            calculateDirections(current_clicked_marker, 3);
+            dialog.dismiss();
+        }
+    }
+
 
     /////// Calculating Directions
 
-    private void calculateDirections(Marker marker){
+    private void calculateDirections(Marker marker, Integer option){
+        if (dialog != null ) dialog.dismiss();
         Log.d(TAG, "calculateDirections: calculating directions.");
-
         com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
                 marker.getPosition().latitude,
                 marker.getPosition().longitude
@@ -386,7 +435,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DirectionsApiRequest directions = new DirectionsApiRequest(mGeoApiContext);
 
         directions.alternatives(false);
-        directions.mode(TravelMode.WALKING);
+        if (option == 1){
+            directions.mode(TravelMode.DRIVING);
+        } else if (option == 2){
+            directions.mode(TravelMode.WALKING);
+        } else if (option == 3){
+            directions.mode(TravelMode.BICYCLING);
+        }
         directions.origin(
                 new com.google.maps.model.LatLng(
                        myLocation.latitude,
@@ -450,7 +505,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addInfoWindow (DirectionsLeg legs, Marker marker){
        Log.d("INFO" , "Changing snippet");
         marker.hideInfoWindow();
-        marker.setSnippet("Trip distance: " + legs.distance);
+        marker.setSnippet(legs.distance + " away");
         marker.showInfoWindow();
 
     }
@@ -537,7 +592,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 calculateDirections (mMap.addMarker(new MarkerOptions().position(nearestLocation)
                         .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
                         .title(nearestName)
-                        .snippet(info)));
+                        .snippet(info)), 2);
             }
         });
     }

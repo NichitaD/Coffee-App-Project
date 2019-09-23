@@ -1,7 +1,6 @@
 package com.myprojects.corso;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,10 +19,10 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "Login";
-    private TextView mStatusTextView;
     private EditText mEmailField;
     private EditText mPasswordField;
     private FirebaseAuth mAuth;
+    public ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Buttons
         findViewById(R.id.emailSignInButton).setOnClickListener(this);
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
+        findViewById(R.id.skip).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -107,9 +106,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
-                        if (!task.isSuccessful()) {
-                            mStatusTextView.setText(R.string.auth_failed);
-                        }
                         hideProgressDialog();
                     }
                 });
@@ -159,11 +155,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             LoginActivity.this.startActivity(myIntent);
         } else if (i == R.id.emailSignInButton) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+        } else if (i == R.id.skip) {
+            Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
+            LoginActivity.this.startActivity(myIntent);
         }
     }
-
-    @VisibleForTesting
-    public ProgressDialog mProgressDialog;
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {
