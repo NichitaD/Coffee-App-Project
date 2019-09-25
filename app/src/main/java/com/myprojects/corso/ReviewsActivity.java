@@ -51,9 +51,6 @@ public class ReviewsActivity extends AppCompatActivity {
                         mRatings = (ArrayList<Long>) document.get("reviewers_rating");
                         mReviews = (ArrayList<String>) document.get("reviews");
                         initRecyclerView();
-                        Log.d(TAG, "here size is" + mRatings.size());
-                        Log.d(TAG, "first rating " + mRatings.get(0));
-
                     } else {
                         Log.d(TAG, "No such document");
                     }

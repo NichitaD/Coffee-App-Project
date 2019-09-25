@@ -100,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int locationUpdateNumber = 1;
     private boolean mLocationPermissionGranted = false;
     private String info = " Click for more info";
-    private static final String TAG = "MapsActivityLog : ";
+    private static final String TAG = "Maps_Activity";
     private String marker_name;
     private GeoPoint marker_geo_point;
     private GoogleMap mMap;
@@ -383,6 +383,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        current_clicked_marker = marker;
         LayoutInflater inflater = LayoutInflater.from(this);
         final Dialog dialog1 = new Dialog(this);
         Window window = dialog1.getWindow();
@@ -397,11 +398,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog1.setContentView(view1);
         TextView title = view1.findViewById(R.id.coffee_name);
         title.setText(marker.getTitle());
-        ImageView rating_bar = view1.findViewById(R.id.rating_bar);
-        rating_bar.setImageResource(R.drawable.five_starts);
+        RatingBar rating_bar = view1.findViewById(R.id.rating_bar);
         dialog1.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog1.show();
-        current_clicked_marker = marker;
+        setRating(dialog1,rating_bar);
         dialog = dialog1;
     }
 
@@ -652,37 +651,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-/*
-    private void addReview (Float rating, String review, String user) {
-        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
-        DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
-        doc_ref.update("ratings_sum", FieldValue.increment(rating));
-        doc_ref.update("number_of_ratings", FieldValue.increment(1));
-        doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                       Double updated_sum = (Double)document.get("ratings_sum");
-                       Long updated_num = (Long)document.get("number_of_ratings");
-                       Double new_rating =  updated_sum / updated_num.doubleValue();
-                       doc_ref.update("rating", new_rating);
-                       doc_ref.update("reviewers",FieldValue.arrayUnion(user));
-                       doc_ref.update("reviewers_rating",FieldValue.arrayUnion(rating));
-                       doc_ref.update("reviews",FieldValue.arrayUnion(review));
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-    }
-
- */
-
 
     private void addReview(Integer rating, String review, String user){
         String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
@@ -696,12 +664,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ArrayList<String> reviewers = (ArrayList<String>) snapshot.get("reviewers");
                 ArrayList<String> reviews = (ArrayList<String>) snapshot.get("reviews");
                 ArrayList<Integer> reviewers_rating = (ArrayList<Integer>) snapshot.get("reviewers_rating");
+                Long update_rating = (Long) snapshot.get("ratings_sum") / (Long) snapshot.get("number_of_ratings");
+                Log.d("rating_update", "updated rating :" + update_rating);
                 reviewers.add(user);
                 reviews.add(review);
                 reviewers_rating.add(rating);
                 transaction.update(doc_ref,"reviewers",reviewers);
                 transaction.update(doc_ref,"reviewers_rating", reviewers_rating);
                 transaction.update(doc_ref,"reviews", reviews);
+                transaction.update(doc_ref,"rating",update_rating);
                 // Success
                 return null;
             }
@@ -719,6 +690,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
     }
 
-
+    private void setRating(Dialog dialog, RatingBar ratingBar) {
+        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
+        DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
+        doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Log.d(TAG, "Task is started ----------------");
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Task is succcesful ----------------");
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                       Long rating = (Long) document.get("rating");
+                       ratingBar.setRating(rating);
+                    } else {
+                        Log.d(TAG, "No such document");
+                        return;
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                    return;
+                }
+            }
+        });
+        dialog.show();
+    }
 }
 
