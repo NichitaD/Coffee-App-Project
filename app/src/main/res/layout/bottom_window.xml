@@ -39,9 +39,9 @@
         android:layout_height="19dp"
         android:layout_below="@id/coffee_name"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="14dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="11dp"
         android:text="Open between : 08:00 - 17:00"
         android:textColor="#1B1724"
         app:layout_constraintBottom_toTopOf="@+id/directions_button"
@@ -53,9 +53,8 @@
         android:id="@+id/imageView6"
         android:layout_width="165dp"
         android:layout_height="148dp"
-
         android:layout_marginTop="26dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginBottom="50dp"
         android:adjustViewBounds="true"
         android:src="@drawable/coffee_shop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,27 +67,57 @@
         android:layout_width="183dp"
         android:layout_height="29dp"
         android:layout_marginStart="173dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="6dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="9dp"
         android:src="@drawable/five_starts"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/directions_button" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
         android:id="@+id/directions_button"
         android:layout_width="136dp"
         android:layout_height="45dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginBottom="36dp"
         android:background="@drawable/button_back"
-        android:onClick="onClick"
         android:fontFamily="sans-serif-black"
+        android:onClick="onClick"
         android:text="Directions"
         app:layout_constraintBottom_toTopOf="@+id/rating_bar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/rate_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp"
+        android:text=" Rate this coffee shop! "
+        android:clickable="true"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="@+id/imageView6"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+    <TextView
+        android:id="@+id/see_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="11dp"
+        android:text="See the reviews!"
+        android:clickable="true"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/rating_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.548"
+        app:layout_constraintStart_toEndOf="@+id/rate_button"
+        app:layout_constraintTop_toBottomOf="@+id/directions_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@
         android:text="MOKKA"
         android:textColor="#130101"
         android:textSize="70dp"
+        
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

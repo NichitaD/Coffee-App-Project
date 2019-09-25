@@ -2,9 +2,11 @@ package com.myprojects.corso;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +23,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.all_button).setOnClickListener(this);
         findViewById(R.id.signOut).setOnClickListener(this);
     }
-
     @Override
     public void onClick(View view) {
         int button = view.getId();

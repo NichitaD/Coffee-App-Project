@@ -9,8 +9,9 @@
         android:color="@color/black"></stroke>
     <!--  Gradient Bg for listrow -->
     <gradient
-        android:startColor="#ff5f6d"
-        android:endColor="#ffc370"
+        android:startColor="#f6d365"
+        android:endColor="#fda085"
         android:angle="180" />
 </shape>
+
 

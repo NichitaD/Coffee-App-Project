@@ -5,6 +5,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,10 +32,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,10 +49,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.google.maps.model.TravelMode;
 import com.myprojects.corso.services.LocationTracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -74,6 +87,7 @@ import com.google.maps.model.DirectionsRoute;
 import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
@@ -99,6 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Polyline oldPolyline;
     private Marker selectedMarker;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Float testDistance;
     private Float closestDistance = new Float(123456789);
     private String nearestName;
@@ -108,6 +123,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int option;
     private Marker current_clicked_marker;
     private Dialog dialog;
+    private EditText review_text;
+    private RatingBar rating_bar;
 
 
     ///// Creating the map activity
@@ -400,13 +417,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
             wlp.y = 50;
             window.setAttributes(wlp);
-            View view1 = inflater.inflate(R.layout.travel_dialog, null);
+            View view2 = inflater.inflate(R.layout.travel_dialog, null);
             dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.dismiss();
             dialog = dialog2;
-            dialog2.setContentView(view1);
+            dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+            dialog2.setContentView(view2);
             dialog2.show();
+        }
+        if(button == R.id.rate_button) {
+            if(firebaseAuth.getCurrentUser() == null){
+                Toast.makeText(MapsActivity.this, "You need to be logged in to leave a review!",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(this);
+                final Dialog dialog3 = new Dialog(this);
+                Window window = dialog3.getWindow();
+                WindowManager.LayoutParams wlp = window.getAttributes();
+                wlp.gravity = Gravity.CENTER;
+                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                wlp.y = 50;
+                window.setAttributes(wlp);
+                View view3 = inflater.inflate(R.layout.rating_dialog, null);
+                dialog3.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog3.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.dismiss();
+                dialog = dialog3;
+                dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialog3.setContentView(view3);
+                dialog3.show();
+                review_text = dialog3.findViewById(R.id.review);
+                rating_bar = dialog3.findViewById(R.id.ratingBar);
+                rating_bar.setStepSize(1);
+            }
+        }
+        if(button == R.id.review_done){
+            Float rating = rating_bar.getRating();
+            String review = review_text.getText().toString();
+            String user = firebaseAuth.getCurrentUser().getEmail();
+            dialog.dismiss();
+            addReview(rating.intValue(), review, user);
+        }
+        if(button == R.id.see_reviews){
+            dialog.dismiss();
+            Intent marker_intent = new Intent(MapsActivity.this, ReviewsActivity.class);
+            marker_intent.putExtra("marker",current_clicked_marker.getTitle());
+            MapsActivity.this.startActivity(marker_intent);
         }
         if (button == R.id.walk){
             calculateDirections(current_clicked_marker, 2);
@@ -417,11 +474,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             dialog.dismiss();
         }
         if (button == R.id.bike){
-            calculateDirections(current_clicked_marker, 3);
-            dialog.dismiss();
+            Toast.makeText(MapsActivity.this, "This mode isn't available yet!",
+                    Toast.LENGTH_SHORT).show();
         }
     }
-
 
     /////// Calculating Directions
 
@@ -596,5 +652,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+/*
+    private void addReview (Float rating, String review, String user) {
+        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
+        DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
+        doc_ref.update("ratings_sum", FieldValue.increment(rating));
+        doc_ref.update("number_of_ratings", FieldValue.increment(1));
+        doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                       Double updated_sum = (Double)document.get("ratings_sum");
+                       Long updated_num = (Long)document.get("number_of_ratings");
+                       Double new_rating =  updated_sum / updated_num.doubleValue();
+                       doc_ref.update("rating", new_rating);
+                       doc_ref.update("reviewers",FieldValue.arrayUnion(user));
+                       doc_ref.update("reviewers_rating",FieldValue.arrayUnion(rating));
+                       doc_ref.update("reviews",FieldValue.arrayUnion(review));
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+ */
+
+
+    private void addReview(Integer rating, String review, String user){
+        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
+        DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
+        doc_ref.update("ratings_sum", FieldValue.increment(rating));
+        doc_ref.update("number_of_ratings", FieldValue.increment(1));
+        db.runTransaction(new Transaction.Function<Void>() {
+            @Override
+            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(doc_ref);
+                ArrayList<String> reviewers = (ArrayList<String>) snapshot.get("reviewers");
+                ArrayList<String> reviews = (ArrayList<String>) snapshot.get("reviews");
+                ArrayList<Integer> reviewers_rating = (ArrayList<Integer>) snapshot.get("reviewers_rating");
+                reviewers.add(user);
+                reviews.add(review);
+                reviewers_rating.add(rating);
+                transaction.update(doc_ref,"reviewers",reviewers);
+                transaction.update(doc_ref,"reviewers_rating", reviewers_rating);
+                transaction.update(doc_ref,"reviews", reviews);
+                // Success
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Transaction success!");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Transaction failure.", e);
+                    }
+                });
+    }
+
+
 }
 
