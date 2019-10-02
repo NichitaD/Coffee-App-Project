@@ -38,7 +38,7 @@ public class ReviewsActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        String coffee_shop_id = marker_name.toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
+        String coffee_shop_id = marker_name.toLowerCase().replaceAll("[^A-Za-z0-9']", "_");
         Log.d(TAG, coffee_shop_id);
         DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
         doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

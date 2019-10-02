@@ -9,55 +9,133 @@
 
     <ImageView
         android:id="@+id/near_button"
+        style="?android:borderlessButtonStyle"
         android:layout_width="340dp"
         android:layout_height="227dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="22dp"
+        android:layout_marginTop="120dp"
         android:clickable="true"
         android:onClick="onClick"
         android:src="@drawable/show_closest"
         android:visibility="visible"
-        style="?android:borderlessButtonStyle"
-        app:layout_constraintBottom_toTopOf="@+id/all_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/all_button"
+        style="?android:borderlessButtonStyle"
         android:layout_width="340dp"
         android:layout_height="227dp"
-        android:layout_marginStart="19dp"
         android:layout_marginTop="22dp"
-        android:layout_marginEnd="19dp"
-        android:layout_marginBottom="15dp"
         android:clickable="true"
         android:onClick="onClick"
-        style="?android:borderlessButtonStyle"
-        app:layout_constraintBottom_toTopOf="@+id/signOut"
+        android:src="@drawable/show_all"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/near_button"
-        android:src= "@drawable/show_all" />
+        app:layout_constraintTop_toBottomOf="@+id/near_button" />
 
     <Button
         android:id="@+id/signOut"
         android:layout_width="200dp"
         android:layout_height="48dp"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="66dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/button_back"
+        android:elevation="30dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/sign_out"
-        android:elevation="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/all_button" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="155dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="240dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/crem"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/near_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/add_coffee"
+                android:layout_width="38dp"
+                android:layout_height="43dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="3dp"
+                android:text="+"
+                app:layout_constraintBottom_toTopOf="@+id/more"
+                app:layout_constraintEnd_toStartOf="@+id/number_coffee"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="36dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/coffee_cup_tracker"
+                app:layout_constraintBottom_toTopOf="@+id/more"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/number_coffee"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/doppio_one"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toTopOf="@+id/more"
+                app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bowlby_one_sc"
+                android:text="COFFEE TRACKER"
+                android:textAlignment="center"
+                android:textColor="#502011"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:text="More information"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

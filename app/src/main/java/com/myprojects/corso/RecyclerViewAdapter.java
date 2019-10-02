@@ -46,7 +46,10 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
         holder.email.setText(mEmails.get(position));
         holder.rating_bar.setRating(mRatings.get(position).floatValue());
         holder.review_content.setText(mReviews.get(position));
-        if (mReviews.get(position) == "")holder.review_content.setText("-User didn't leave a review-");
+        if (mReviews.get(position) == ""){
+            holder.review_content.setText("-User didn't leave a review-");
+            holder.review_content.setTextColor(Color.GRAY);
+        }
         holder.rating_bar.setIsIndicator(true);
         Random rnd = new Random();
         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));

@@ -62,7 +62,7 @@
             <TextView
                 android:id="@+id/review_content"
                 android:layout_width="220dp"
-                android:layout_height="37dp"
+                android:layout_height="wrap_content"
                 android:text="This is just a preview, the acutual review will be set later"
                 android:textAlignment="center"
                 android:textColor="#201322"

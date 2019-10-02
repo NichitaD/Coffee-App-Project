@@ -1,13 +1,9 @@
 package com.myprojects.corso;
 
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,7 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -34,19 +29,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -84,10 +72,8 @@ import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
-import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
@@ -143,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (option == 2) {
             setAllMarkers();
         }
-        final ImageButton button =  findViewById(R.id.reset);
+        final ImageButton button = findViewById(R.id.reset);
         button.setEnabled(false);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -172,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         customizeMap(googleMap);
         mMap.setOnInfoWindowClickListener(this);
 
-        if(mGeoApiContext == null){
+        if (mGeoApiContext == null) {
             mGeoApiContext = new GeoApiContext.Builder().
                     apiKey("AIzaSyAh_mnkmplWNTxhFwUAZuj-WqlZ-oMIn0s")
                     .build();
@@ -240,6 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
@@ -253,6 +240,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -267,6 +255,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
     private boolean checkMapServices() {
         if (isServicesOK()) {
             if (isMapsEnabled()) {
@@ -294,8 +283,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (currentLocation != null) {
                                 Log.d(TAG, currentLocation.toString());
                                 myLocation = (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));    // location
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,14f));
-                                if (option == 1){
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14f));
+                                if (option == 1) {
                                     setNearestMarker();
                                 }
                             }
@@ -400,14 +389,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         title.setText(marker.getTitle());
         RatingBar rating_bar = view1.findViewById(R.id.rating_bar);
         dialog1.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        setRating(dialog1,rating_bar);
+        setRating(dialog1, rating_bar);
         dialog = dialog1;
     }
 
     @Override
     public void onClick(View view) {
         int button = view.getId();
-        if (button == R.id.directions_button){
+        if (button == R.id.directions_button) {
             LayoutInflater inflater = LayoutInflater.from(this);
             final Dialog dialog2 = new Dialog(this);
             Window window = dialog2.getWindow();
@@ -425,8 +414,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             dialog2.setContentView(view2);
             dialog2.show();
         }
-        if(button == R.id.rate_button) {
-            if(firebaseAuth.getCurrentUser() == null){
+        if (button == R.id.rate_button) {
+            if (firebaseAuth.getCurrentUser() == null) {
                 Toast.makeText(MapsActivity.this, "You need to be logged in to leave a review!",
                         Toast.LENGTH_SHORT).show();
             } else {
@@ -451,28 +440,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 rating_bar.setStepSize(1);
             }
         }
-        if(button == R.id.review_done){
+        if (button == R.id.review_done) {
             Float rating = rating_bar.getRating();
             String review = review_text.getText().toString();
             String user = firebaseAuth.getCurrentUser().getEmail();
             dialog.dismiss();
             addReview(rating.intValue(), review, user);
         }
-        if(button == R.id.see_reviews){
+        if (button == R.id.see_reviews) {
             dialog.dismiss();
             Intent marker_intent = new Intent(MapsActivity.this, ReviewsActivity.class);
-            marker_intent.putExtra("marker",current_clicked_marker.getTitle());
+            marker_intent.putExtra("marker", current_clicked_marker.getTitle());
             MapsActivity.this.startActivity(marker_intent);
         }
-        if (button == R.id.walk){
+        if (button == R.id.walk) {
             calculateDirections(current_clicked_marker, 2);
             dialog.dismiss();
         }
-        if (button == R.id.car){
+        if (button == R.id.car) {
             calculateDirections(current_clicked_marker, 1);
             dialog.dismiss();
         }
-        if (button == R.id.bike){
+        if (button == R.id.bike) {
             Toast.makeText(MapsActivity.this, "This mode isn't available yet!",
                     Toast.LENGTH_SHORT).show();
         }
@@ -480,8 +469,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /////// Calculating Directions
 
-    private void calculateDirections(Marker marker, Integer option){
-        if (dialog != null ) dialog.dismiss();
+    private void calculateDirections(Marker marker, Integer option) {
+        if (dialog != null) dialog.dismiss();
         Log.d(TAG, "calculateDirections: calculating directions.");
         com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
                 marker.getPosition().latitude,
@@ -490,17 +479,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DirectionsApiRequest directions = new DirectionsApiRequest(mGeoApiContext);
 
         directions.alternatives(false);
-        if (option == 1){
+        if (option == 1) {
             directions.mode(TravelMode.DRIVING);
-        } else if (option == 2){
+        } else if (option == 2) {
             directions.mode(TravelMode.WALKING);
-        } else if (option == 3){
+        } else if (option == 3) {
             directions.mode(TravelMode.BICYCLING);
         }
         directions.origin(
                 new com.google.maps.model.LatLng(
-                       myLocation.latitude,
-                       myLocation.longitude
+                        myLocation.latitude,
+                        myLocation.longitude
                 )
         );
         Log.d(TAG, "calculateDirections: destination: " + destination.toString());
@@ -510,33 +499,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 addPolylinesToMap(result, marker);
                 findViewById(R.id.reset).setEnabled(true);
             }
+
             @Override
             public void onFailure(Throwable e) {
-                Log.e(TAG, "calculateDirections: Failed to get directions: " + e.getMessage() );
+                Log.e(TAG, "calculateDirections: Failed to get directions: " + e.getMessage());
             }
         });
     }
 
     ////// Adding polylines
 
-    private void addPolylinesToMap(final DirectionsResult result, Marker marker){
+    private void addPolylinesToMap(final DirectionsResult result, Marker marker) {
         selectedMarker = marker;
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 Log.d(TAG, "run: result routes: " + result.routes.length);
-                if(oldPolyline != null){
+                if (oldPolyline != null) {
                     oldPolyline.remove();
                 }
-                for(DirectionsRoute route: result.routes){
+                for (DirectionsRoute route : result.routes) {
                     Log.d(TAG, "run: leg: " + route.legs[0].toString());
-                    addInfoWindow(route.legs[0], marker );
+                    addInfoWindow(route.legs[0], marker);
                     List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
 
                     List<LatLng> newDecodedPath = new ArrayList<>();
 
                     // This loops through all the LatLng coordinates of ONE polyline.
-                    for(com.google.maps.model.LatLng latLng: decodedPath){
+                    for (com.google.maps.model.LatLng latLng : decodedPath) {
 
 //                        Log.d(TAG, "run: latlng: " + latLng.toString());
 
@@ -557,8 +547,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ////// Adding a InfoWindow for trip
 
-    private void addInfoWindow (DirectionsLeg legs, Marker marker){
-       Log.d("INFO" , "Changing snippet");
+    private void addInfoWindow(DirectionsLeg legs, Marker marker) {
+        Log.d("INFO", "Changing snippet");
         marker.hideInfoWindow();
         marker.setSnippet(legs.distance + " away");
         marker.showInfoWindow();
@@ -587,12 +577,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ////// Reseting map
 
-    private void resetMap (Polyline polilyne, Marker marker){
+    private void resetMap(Polyline polilyne, Marker marker) {
 
         polilyne.remove();
         marker.hideInfoWindow();
         marker.setSnippet("Click to determine route");
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,14f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14f));
 
     }
 
@@ -606,10 +596,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        marker_name=(String) document.get("name");
+                        marker_name = (String) document.get("name");
                         marker_geo_point = (GeoPoint) document.get("location");
                         Log.d("Marker_info", "Setting marker " + marker_name + " to " + marker_geo_point);
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(marker_geo_point.getLatitude(),marker_geo_point.getLongitude()))
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(marker_geo_point.getLatitude(), marker_geo_point.getLongitude()))
                                 .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
                                 .title(marker_name)
                                 .snippet(info));
@@ -634,8 +624,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         testLocation.setLatitude(marker_geo_point.getLatitude());
                         testLocation.setLongitude(marker_geo_point.getLongitude());
                         testDistance = mine.distanceTo(testLocation);
-                        Log.d("Comparing","From " + mine + "to :" + testLocation + "=" + testDistance);
-                        if(testDistance < closestDistance){
+                        Log.d("Comparing", "From " + mine + "to :" + testLocation + "=" + testDistance);
+                        if (testDistance < closestDistance) {
                             closestDistance = testDistance;
                             nearestName = (String) document.get("name");
                             nearestLocation = new LatLng(testLocation.getLatitude(), testLocation.getLongitude());
@@ -644,7 +634,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     Log.d("Database_info", "Error getting documents: ", task.getException());
                 }
-                calculateDirections (mMap.addMarker(new MarkerOptions().position(nearestLocation)
+                calculateDirections(mMap.addMarker(new MarkerOptions().position(nearestLocation)
                         .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
                         .title(nearestName)
                         .snippet(info)), 2);
@@ -652,8 +642,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void addReview(Integer rating, String review, String user){
-        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
+    private void addReview(Integer rating, String review, String user) {
+        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9']", "_");
         DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
         doc_ref.update("ratings_sum", FieldValue.increment(rating));
         doc_ref.update("number_of_ratings", FieldValue.increment(1));
@@ -669,10 +659,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 reviewers.add(user);
                 reviews.add(review);
                 reviewers_rating.add(rating);
-                transaction.update(doc_ref,"reviewers",reviewers);
-                transaction.update(doc_ref,"reviewers_rating", reviewers_rating);
-                transaction.update(doc_ref,"reviews", reviews);
-                transaction.update(doc_ref,"rating",update_rating);
+                transaction.update(doc_ref, "reviewers", reviewers);
+                transaction.update(doc_ref, "reviewers_rating", reviewers_rating);
+                transaction.update(doc_ref, "reviews", reviews);
+                transaction.update(doc_ref, "rating", update_rating);
                 // Success
                 return null;
             }
@@ -691,7 +681,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setRating(Dialog dialog, RatingBar ratingBar) {
-        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9]", "_");
+        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9']", "_");
+        Log.d("Test_name",coffee_shop_id);
         DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
         doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -701,8 +692,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.d(TAG, "Task is succcesful ----------------");
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                       Long rating = (Long) document.get("rating");
-                       ratingBar.setRating(rating);
+                        Long rating = (Long) document.get("rating");
+                        ratingBar.setRating(rating);
                     } else {
                         Log.d(TAG, "No such document");
                         return;
@@ -715,5 +706,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         dialog.show();
     }
+
 }
 

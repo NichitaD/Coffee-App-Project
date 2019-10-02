@@ -13,10 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText mEmailField;
     private EditText mPasswordField;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
 
@@ -84,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     Toast.LENGTH_SHORT).show();
                             Intent myIntent = new Intent(RegisterActivity.this, LoginActivity.class);
                             RegisterActivity.this.startActivity(myIntent);
+                            addToDatabase(user.getEmail());
                         } else {
                             Log.e(TAG, "sendEmailVerification", task.getException());
                             Toast.makeText(RegisterActivity.this,
@@ -134,6 +142,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onStop() {
         super.onStop();
         hideProgressDialog();
+    }
+
+    private void addToDatabase (String email){
+
+        Map<String, Object>  tracker = new HashMap<>();
+        tracker.put("day", 0);
+        tracker.put("week", 0);
+        tracker.put("month", 0);
+        tracker.put("year",0);
+        db.collection("users").document(email)
+                .set(tracker)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+
     }
 
 }
