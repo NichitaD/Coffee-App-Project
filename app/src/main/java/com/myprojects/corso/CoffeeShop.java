@@ -10,7 +10,7 @@ public class CoffeeShop {
     private Integer rating;
     private int numberOfRatings = 0, ratingsSum = 0;
     public  ArrayList<String>  reviews = new ArrayList<>();
-    //Logo to be added
+    //logo to be added
 
     public  CoffeeShop(String name, LatLng latLng){
         this.name = name;

@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Buttons
         findViewById(R.id.emailSignInButton).setOnClickListener(this);
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
-        findViewById(R.id.skip).setOnClickListener(this);
+        //findViewById(R.id.skip).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -155,10 +155,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             LoginActivity.this.startActivity(myIntent);
         } else if (i == R.id.emailSignInButton) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.skip) {
+        }/* else if (i == R.id.skip) {
             Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
             LoginActivity.this.startActivity(myIntent);
-        }
+        }*/
     }
 
     public void showProgressDialog() {

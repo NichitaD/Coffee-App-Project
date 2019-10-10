@@ -2,69 +2,38 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient">
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="188dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Find your coffee."
-        android:textColor="#0E0101"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/image_card"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/image_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="214dp"
+        android:layout_height="250dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="60dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:srcCompat="@drawable/coffee_simple" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="274dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/alef_bold"
-        android:text="MOKKA"
-        android:textColor="#130101"
-        android:textSize="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55" />
+        app:srcCompat="@drawable/logo" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="38dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="#CCFFFF"
+        android:layout_marginBottom="20dp"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.528"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_card"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/image_card">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,25 +46,25 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                app:srcCompat="@drawable/baseline_mail_black_24dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="6dp"
+                app:srcCompat="@drawable/email_white" />
 
             <EditText
                 android:id="@+id/fieldEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="@color/black"
-                android:hint="@string/hint_email"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="15dp"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/calibri_regular"
+                android:hint="EMAIL"
                 android:inputType="textEmailAddress"
                 android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textColorHint="#010005"
+                android:textColor="#070505"
+                android:textColorHint="#F6F6FC"
+                android:textSize="16sp"
                 android:textStyle="bold" />
-
-
 
         </LinearLayout>
 
@@ -104,18 +73,18 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="38dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="23dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="200dp"
         android:backgroundTint="#CCFFFF"
         android:outlineSpotShadowColor="@color/blue"
         app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/emailSignInButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardView2">
+        app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -126,43 +95,76 @@
                 android:id="@+id/imageView4"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="7dp"
                 android:layout_marginBottom="5dp"
-                app:srcCompat="@drawable/baseline_lock_black_24dp" />
+                app:srcCompat="@drawable/lock_white" />
 
             <EditText
                 android:id="@+id/fieldPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="@color/black"
-                android:hint="@string/hint_password"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="15dp"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/calibri_regular"
+                android:hint="PASSWORD"
                 android:inputType="textPassword"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textColorHint="#000103"
+                android:textColor="#070707"
+                android:textColorHint="#F7EEEE"
+                android:textSize="16sp"
                 android:textStyle="bold" />
+
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.cardview.widget.CardView>
 
+
     <Button
         android:id="@+id/emailCreateAccountButton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="129dp"
+        android:layout_width="320dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="82dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="3dp"
         android:background="@drawable/button_back"
-        android:fontFamily="sans-serif-black"
-        android:text="Create account"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="@font/calibri_bold"
+        android:text="@string/create_account"
+        android:textColor="#FCF7FC"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/google"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+
+    <ImageView
+        android:id="@+id/google"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="45dp"
+        app:layout_constraintBottom_toTopOf="@+id/facebook"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailCreateAccountButton"
+        app:srcCompat="@drawable/google_test" />
+
+    <ImageView
+        android:id="@+id/facebook"
+        android:layout_width="320dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="52dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/google"
+        app:srcCompat="@drawable/fb_test" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
