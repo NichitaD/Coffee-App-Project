@@ -14,3 +14,4 @@ These are some things that I implemented in this project so far :
  - Review and rating system
  - Coffee consuption track system
  
+![device-2019-10-13-003548](https://user-images.githubusercontent.com/53866394/66708029-c9305580-ed52-11e9-9fba-5f0230ba9598.png)
