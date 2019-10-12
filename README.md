@@ -16,10 +16,11 @@ These are some things that I implemented in this project so far :
  
  <div class="row">
   <div class="column">
-    <img src="https://user-images.githubusercontent.com/53866394/66708106-1a8d1480-ed54-11e9-9505-40f99c420de7.png"  style="width:100%">
+    <img src="![output-onlinepngtools (5)](https://user-images.githubusercontent.com/53866394/66708106-1a8d1480-ed54-11e9-9505-40f99c420de7.png)"  style="width:100%">
   </div>
   <div class="column">
-    <img src="https://user-images.githubusercontent.com/53866394/66708116-2ed11180-ed54-11e9-8c91-494b9aae9762.png"  style="width:100%">
+    <img src="![output-onlinepngtools (4)](https://user-images.githubusercontent.com/53866394/66708116-2ed11180-ed54-11e9-8c91-494b9aae9762.png)
+"  style="width:100%">
   </div>
   <div class="column">
     <img src="https://user-images.githubusercontent.com/53866394/66708121-427c7800-ed54-11e9-8a8a-46534c88061a.png"  style="width:100%">
