@@ -12,8 +12,8 @@
         android:id="@+id/image_card"
         android:layout_width="214dp"
         android:layout_height="250dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +63,7 @@
                 android:textAllCaps="false"
                 android:textColor="#070505"
                 android:textColorHint="#F6F6FC"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
 
@@ -115,7 +115,7 @@
                 android:textAllCaps="false"
                 android:textColor="#070707"
                 android:textColorHint="#F7EEEE"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
 
@@ -151,28 +151,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailSignInButton" />
 
-    <ImageView
+    <TextView
         android:id="@+id/google"
         android:layout_width="320dp"
-        android:layout_height="50dp"
+        android:layout_height="35dp"
         android:layout_marginTop="19dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_google"
+        android:fontFamily="@font/calibri_bold"
+        android:paddingVertical="8dp"
+        android:text="SIGN IN WITH GOOGLE"
+        android:textAlignment="center"
+        android:textColor="#F7F3F3"
         app:layout_constraintBottom_toTopOf="@+id/facebook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@drawable/google_test" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <ImageView
+    <TextView
         android:id="@+id/facebook"
         android:layout_width="320dp"
-        android:layout_height="52dp"
+        android:layout_height="35dp"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/button_fb"
+        android:fontFamily="@font/calibri_bold"
+        android:paddingVertical="8dp"
+        android:text="SIGN IN WITH FACEBOOK"
+        android:textAlignment="center"
+        android:textColor="#F7F3F4"
         app:layout_constraintBottom_toTopOf="@+id/emailCreateAccountButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/google"
-        app:srcCompat="@drawable/fb_test" />
+        app:layout_constraintTop_toBottomOf="@+id/google" />
 
     <Button
         android:id="@+id/emailCreateAccountButton"
@@ -183,7 +193,7 @@
         android:fontFamily="@font/calibri_bold"
         android:text="@string/create_account"
         android:textColor="#FCF7FC"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.509"

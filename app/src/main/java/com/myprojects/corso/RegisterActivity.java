@@ -147,10 +147,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void addToDatabase (String email){
 
         Map<String, Object>  tracker = new HashMap<>();
-        tracker.put("day", 0);
-        tracker.put("week", 0);
-        tracker.put("month", 0);
-        tracker.put("year",0);
+        tracker.put("Monday", 0);
+        tracker.put("Tuesday", 0);
+        tracker.put("Wednesday", 0);
+        tracker.put("Thursday",0);
+        tracker.put("Friday",0);
+        tracker.put("Saturday",0);
+        tracker.put("Sunday",0);
         db.collection("users").document(email)
                 .set(tracker)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

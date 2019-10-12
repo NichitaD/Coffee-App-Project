@@ -125,46 +125,52 @@
         android:id="@+id/emailCreateAccountButton"
         android:layout_width="320dp"
         android:layout_height="35dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="82dp"
-        android:layout_marginEnd="46dp"
-        android:layout_marginBottom="3dp"
         android:background="@drawable/button_back"
         android:fontFamily="@font/calibri_bold"
         android:text="@string/create_account"
         android:textColor="#FCF7FC"
         android:textSize="18sp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toTopOf="@+id/google"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView3" />
 
-    <ImageView
+    <TextView
         android:id="@+id/google"
         android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="45dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/button_google"
+        android:fontFamily="@font/calibri_bold"
+        android:paddingVertical="8dp"
+        android:text="SIGN IN WITH GOOGLE"
+        android:textAlignment="center"
+        android:textColor="#F7F3F3"
         app:layout_constraintBottom_toTopOf="@+id/facebook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailCreateAccountButton"
-        app:srcCompat="@drawable/google_test" />
+        app:layout_constraintTop_toBottomOf="@+id/emailCreateAccountButton" />
 
-    <ImageView
+    <TextView
         android:id="@+id/facebook"
         android:layout_width="320dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="46dp"
-        android:layout_marginBottom="52dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/button_fb"
+        android:fontFamily="@font/calibri_bold"
+        android:paddingVertical="8dp"
+        android:text="SIGN IN WITH FACEBOOK"
+        android:textAlignment="center"
+        android:textColor="#F7F3F4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/google"
-        app:srcCompat="@drawable/fb_test" />
+        app:layout_constraintTop_toBottomOf="@+id/google" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

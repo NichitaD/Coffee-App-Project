@@ -600,7 +600,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker_geo_point = (GeoPoint) document.get("location");
                         Log.d("Marker_info", "Setting marker " + marker_name + " to " + marker_geo_point);
                         mMap.addMarker(new MarkerOptions().position(new LatLng(marker_geo_point.getLatitude(), marker_geo_point.getLongitude()))
-                                .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                                .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 100, 150)))
                                 .title(marker_name)
                                 .snippet(info));
                     }
@@ -635,7 +635,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.d("Database_info", "Error getting documents: ", task.getException());
                 }
                 calculateDirections(mMap.addMarker(new MarkerOptions().position(nearestLocation)
-                        .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 135, 127)))
+                        .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 100, 150)))
                         .title(nearestName)
                         .snippet(info)), 2);
             }

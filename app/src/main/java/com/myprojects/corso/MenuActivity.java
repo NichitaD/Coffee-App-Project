@@ -16,6 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -26,18 +30,26 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MenuActivity extends Activity implements View.OnClickListener {
+    private Long monday, tuesday, wednesday, thursday, friday, sunday, saturday;
+    private Integer mon = 1, tue = 2, wed = 3, thu = 4, fri = 5, sat = 6, sun = 7;
+    private BarChart chart;
+    private ArrayList<BarEntry> BARENTRY;
+    private ArrayList<String> BarEntryLabels;
+    private BarDataSet Bardataset;
+    private BarData BARDATA;
     private FirebaseAuth mAuth;
     private Calendar old_date = Calendar.getInstance();
     private String TAG = "Menu_Activity";
     private TextView coffee_display;
-    private TextView day_info;
-    private TextView week_info;
-    private TextView month_info;
-    private TextView year_info;
+    private Integer coffees_drank_today;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Date last_access_date;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +57,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_menu);
         coffee_display = findViewById(R.id.number_coffee);
+        checkDate();
         setNumber();
         findViewById(R.id.near_button).setOnClickListener(this);
         findViewById(R.id.all_button).setOnClickListener(this);
@@ -82,10 +95,10 @@ public class MenuActivity extends Activity implements View.OnClickListener {
             MenuActivity.this.startActivity(myIntent);
         }
         if (button == R.id.add_coffee) {
+            incrementDatabase();
             setNumber();
-            updateDatabase();
         }
-        if (button == R.id.more){
+        if (button == R.id.more) {
             openStats();
         }
     }
@@ -102,34 +115,30 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                     if (task.getResult().getDocuments().size() > 0) {
                         DocumentSnapshot document = task.getResult().getDocuments().get(0);
                         Timestamp date = (Timestamp) document.get("old_date");
+                        last_access_date = date.toDate();
                         old_date.setTime(date.toDate());
                         Integer this_day = current_date.get(Calendar.DAY_OF_MONTH);
-                        Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
-                        Integer this_month = current_date.get(Calendar.MONTH);
-                        Integer this_year = current_date.get(Calendar.YEAR);
                         Integer old_day = old_date.get(Calendar.DAY_OF_MONTH);
+                        Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
                         Integer old_week = old_date.get(Calendar.WEEK_OF_YEAR);
-                        Integer old_month = old_date.get(Calendar.MONTH);
-                        Integer old_year = old_date.get(Calendar.YEAR);
-                        if (old_day - this_day < 0 || this_day - old_day < 0) {
+                 if (old_day - this_day < 0 || this_day - old_day < 0) {
                             coffee_display.setText("0");
                             DocumentReference doc_date = db.collection("date_check").document("old_date");
                             doc_date.update("old_date", current_date.getTime());
                             DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("day", 0);
+                            doc_tracker.update("today", 0);
                         }
-                        if (old_week - this_week < 0 || this_week - old_week < 0) {
-                            DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("week", 0);
-                        }
-                        if (old_month - this_month < 0 || this_month - old_month < 0) {
-                            DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("month", 0);
-                        }
-                        if (old_year - this_year < 0 || this_year - old_year < 0) {
-                            DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("year", 0);
-                        }
+                 if(old_week - this_week < 0 ||this_week- old_week < 0) {
+                           DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                            doc_tracker.update("Monday", 0);
+                            doc_tracker.update("Tuesday", 0);
+                            doc_tracker.update("Wednesday", 0);
+                            doc_tracker.update("Thursday", 0);
+                            doc_tracker.update("Friday", 0);
+                            doc_tracker.update("Saturday", 0);
+                            doc_tracker.update("Sunday", 0);
+                 }
+                 updateDatabase();
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
@@ -137,14 +146,45 @@ public class MenuActivity extends Activity implements View.OnClickListener {
             }
         });
     }
-
-    private void updateDatabase () {
+    private  void incrementDatabase () {
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-        docRef.update("day", FieldValue.increment(1));
-        docRef.update("week", FieldValue.increment(1));
-        docRef.update("month", FieldValue.increment(1));
-        docRef.update("year", FieldValue.increment(1));
+        docRef.update("today", FieldValue.increment(1));
     }
+
+    private void updateDatabase(){
+        Calendar current_date = Calendar.getInstance();
+        Calendar last_acces =  Calendar.getInstance();
+        String day_in_week = findDay(current_date.get(Calendar.DAY_OF_WEEK));
+        last_acces.setTime(last_access_date);
+        Integer this_day = current_date.get(Calendar.DAY_OF_YEAR);
+        Integer old_day = last_acces.get(Calendar.DAY_OF_YEAR);
+        Integer day_diffrence = this_day - old_day;
+        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+        docRef.update(day_in_week,coffees_drank_today);
+        Integer day_for_change;
+        this_day = current_date.get(Calendar.DAY_OF_WEEK);
+        for(day_for_change = this_day-1; day_diffrence > 1; --day_diffrence){
+            if(day_for_change == 0) day_for_change = 7;
+           docRef.update(findDay(day_for_change),0);
+            --day_for_change;
+        }
+    }
+
+    private String findDay (Integer day){
+        String day_name = new String();
+        Calendar current_date = Calendar.getInstance();
+        if(current_date.get(Calendar.DAY_OF_WEEK) == 2)day_name = "Monday";
+        else if(day == 3)day_name = "Tuesday";
+        else if(day == 4)day_name = "Wednesday";
+        else if(day == 5)day_name = "Thursday";
+        else if(day == 6)day_name = "Friday";
+        else if(day == 7)day_name = "Saturday";
+        else if(day == 1)day_name = "Sunday";
+        Log.d("Find_day", day_name + " " + day );
+        return day_name;
+    }
+
+
 
     private void setNumber() {
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
@@ -154,8 +194,17 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Long coffee_number = (Long) document.get("day");
+                        Long coffee_number = (Long) document.get("today");
+                        coffees_drank_today = coffee_number.intValue();
                         coffee_display.setText(coffee_number.toString());
+                        monday = (Long) document.get("Monday");
+                        thursday = (Long) document.get("Thursday");
+                        wednesday = (Long) document.get("Wednesday");
+                        tuesday = (Long) document.get("Tuesday");
+                        friday = (Long) document.get("Friday");
+                        saturday = (Long) document.get("Saturday");
+                        sunday = (Long) document.get("Sunday");
+                        updateDatabase();
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");
@@ -181,32 +230,41 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         dialog3.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog3.setContentView(view3);
+        chart = (BarChart) dialog3.findViewById(R.id.chart1);
+        BARENTRY = new ArrayList<>();
+        BarEntryLabels = new ArrayList<String>();
+        AddValuesToBARENTRY();
+        AddValuesToBarEntryLabels();
+        Bardataset = new BarDataSet(BARENTRY, "Coffees / Day");
+        BARDATA = new BarData(BarEntryLabels, Bardataset);
+        Bardataset.setColor(R.color.redish);
+        chart.setData(BARDATA);
+        chart.getBarData().setGroupSpace(10);
+        chart.animateY(3000);
+        chart.setDrawGridBackground(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setDescription("");
+        chart.setDragEnabled(true);
+        chart.setVisibleXRange(1, 4);
         dialog3.show();
-        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        day_info = view3.findViewById(R.id.day);
-                        week_info = view3.findViewById(R.id.week);
-                        month_info = view3.findViewById(R.id.month);
-                        year_info = view3.findViewById(R.id.year);
-                        day_info.setText("Today you've drank " + document.get("day") + " coffes");
-                        week_info.setText("This week you've drank " + document.get("week") + " coffees");
-                        month_info.setText("This month you've drank " + document.get("month") + " coffees");
-                        year_info.setText("This year you've drank " + document.get("year") + " coffees");
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
     }
-
-    
+    public void AddValuesToBARENTRY(){
+        BARENTRY.add(new BarEntry(monday, 0));
+        BARENTRY.add(new BarEntry(tuesday, 1));
+        BARENTRY.add(new BarEntry(wednesday, 2));
+        BARENTRY.add(new BarEntry(thursday, 3));
+        BARENTRY.add(new BarEntry(friday, 4));
+        BARENTRY.add(new BarEntry(saturday, 5));
+        BARENTRY.add(new BarEntry(sunday, 6));
+    }
+    private void AddValuesToBarEntryLabels() {
+        BarEntryLabels.add("Monday");
+        BarEntryLabels.add("Tuesday");
+        BarEntryLabels.add("Wensday");
+        BarEntryLabels.add("Thursday");
+        BarEntryLabels.add("Friday");
+        BarEntryLabels.add("Saturday");
+        BarEntryLabels.add("Sunday");
+    }
 }
