@@ -26,6 +26,19 @@ These are some things that I implemented in this project so far :
     <img src="https://user-images.githubusercontent.com/53866394/66708121-427c7800-ed54-11e9-8a8a-46534c88061a.png"  style="width:100%">
   </div>
 </div>
+
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
  
 ![output-onlinepngtools (5)](https://user-images.githubusercontent.com/53866394/66708106-1a8d1480-ed54-11e9-9505-40f99c420de7.png)
  
