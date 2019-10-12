@@ -10,8 +10,9 @@ coffee consumption, and always be informed about the latest promotions.
 These are some things that I implemented in this project so far :
  - Google Directions API
  - Google Maps API
- - Firebase Authantification an Database (CloudStore)
+ - Firebase Authantification and Database (CloudStore)
  - Review and rating system
  - Coffee consuption track system
  
-![device-2019-10-13-003548](https://user-images.githubusercontent.com/53866394/66708029-c9305580-ed52-11e9-9fba-5f0230ba9598.png)
+![output-onlinepngtools (2)](https://user-images.githubusercontent.com/53866394/66708051-2926fc00-ed53-11e9-9edd-6fd327fb3dfb.png)
+
