@@ -54,15 +54,15 @@ public class MenuActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkDate();
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_menu);
-        coffee_display = findViewById(R.id.number_coffee);
-        checkDate();
+        coffee_display = findViewById(R.id.coffee_display);
         setNumber();
         findViewById(R.id.near_button).setOnClickListener(this);
         findViewById(R.id.all_button).setOnClickListener(this);
         findViewById(R.id.signOut).setOnClickListener(this);
-        findViewById(R.id.add_coffee).setOnClickListener(this);
+        findViewById(R.id.plus).setOnClickListener(this);
     }
 
     @Override
@@ -94,11 +94,15 @@ public class MenuActivity extends Activity implements View.OnClickListener {
             Intent myIntent = new Intent(MenuActivity.this, LoginActivity.class);
             MenuActivity.this.startActivity(myIntent);
         }
-        if (button == R.id.add_coffee) {
+        if (button == R.id.plus) {
             incrementDatabase();
             setNumber();
         }
-        if (button == R.id.more) {
+        if (button == R.id.minus) {
+            decrementDatabase();
+            setNumber();
+        }
+        if (button == R.id.stats) {
             openStats();
         }
     }
@@ -146,9 +150,13 @@ public class MenuActivity extends Activity implements View.OnClickListener {
             }
         });
     }
-    private  void incrementDatabase () {
+    private  void incrementDatabase(){
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
         docRef.update("today", FieldValue.increment(1));
+    }
+    private void decrementDatabase(){
+        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+        docRef.update("today", FieldValue.increment(-1));
     }
 
     private void updateDatabase(){
