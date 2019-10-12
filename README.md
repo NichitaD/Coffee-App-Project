@@ -26,7 +26,7 @@ These are some things that I implemented in this project so far :
 
 ![output-onlinepngtools (9)](https://user-images.githubusercontent.com/53866394/66708152-abfc8680-ed54-11e9-8cb4-bb5f02a293df.png)
 
-![device-2019-10-13-010245](https://user-images.githubusercontent.com/53866394/66708188-393fdb00-ed55-11e9-899a-d73a5c10adc7.png)
+![output-onlinepngtools (10)](https://user-images.githubusercontent.com/53866394/66708197-6ee4c400-ed55-11e9-9169-464204dc650a.png)
 
 
 
