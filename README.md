@@ -32,7 +32,7 @@ These are some things that I implemented in this project so far :
 
 <p align="middle">
   <img src="https://user-images.githubusercontent.com/53866394/66715054-8361a480-edc7-11e9-9e41-af322df1d494.png" width="260" hspace="15"/>
-  <img src="https://user-images.githubusercontent.com/53866394/66714825-83ac7080-edc4-11e9-83e6-405042f8d4b2.png" width="260" hspace="15"/> 
+  <img src="https://user-images.githubusercontent.com/53866394/66715105-e0f5f100-edc7-11e9-9c14-a8cabf0d041f.png" width="260" hspace="15"/> 
   <img src="https://user-images.githubusercontent.com/53866394/66715059-86f52b80-edc7-11e9-97dd-93d4e8df2a2c.png" width="260" />
 </p>
 
