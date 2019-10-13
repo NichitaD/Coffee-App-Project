@@ -14,7 +14,7 @@ These are some things that I implemented in this project so far :
  - Review and rating system
  - Coffee consuption track system
 
-![all](https://user-images.githubusercontent.com/53866394/66714760-9d998380-edc3-11e9-80da-551803b2ef47.png)
+![output-onlinepngtools (11)](https://user-images.githubusercontent.com/53866394/66714786-fbc66680-edc3-11e9-842b-246f9e049b1f.png)
 
 
 
