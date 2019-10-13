@@ -17,8 +17,8 @@ These are some things that I implemented in this project so far :
 
 
 <p align="middle">
-  <img src="https://user-images.githubusercontent.com/53866394/66714827-84dd9d80-edc4-11e9-9f94-be1d044f0c36.png" width="260" hspace="15" <img style="border:5px solid black"> />
-  <img src="https://user-images.githubusercontent.com/53866394/66714829-87d88e00-edc4-11e9-9ab4-5532fc406fce.png" width="260" hspace="15" border="5"/> 
+  <img src="https://user-images.githubusercontent.com/53866394/66714827-84dd9d80-edc4-11e9-9f94-be1d044f0c36.png" width="260" hspace="15" />
+  <img src="https://user-images.githubusercontent.com/53866394/66714829-87d88e00-edc4-11e9-9ab4-5532fc406fce.png" width="260" hspace="15" border="20"/> 
   <img src="https://user-images.githubusercontent.com/53866394/66714835-9030c900-edc4-11e9-98bb-58cb9dfd32b4.png" width="260" 
  border="5" />
 </p>
