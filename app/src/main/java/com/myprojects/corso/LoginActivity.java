@@ -15,6 +15,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +27,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mPasswordField;
     private FirebaseAuth mAuth;
     public ProgressDialog mProgressDialog;
+    private FirebaseFirestore db;
+    private boolean check;
+    private boolean access;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
         //findViewById(R.id.skip).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -89,8 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         Toast.LENGTH_SHORT).show();
                             }else {
                                 Log.d(TAG, "signInWithEmail:success");
-                                Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
-                                LoginActivity.this.startActivity(myIntent);
+                                updateUI(mAuth.getCurrentUser());
                             }
                         } else {
                             // If sign in fails, display a message to the user.
@@ -139,8 +146,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
+
         if (user != null) {
-            if(user.isEmailVerified()) {
+            if(isCoffeeShop()){
+                if(access == true){
+                    Intent myIntent = new Intent(LoginActivity.this, CoffeeShopActivity.class);
+                    LoginActivity.this.startActivity(myIntent);
+                } else{
+                    Toast.makeText(LoginActivity.this, "Your account has not been created yet!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(user.isEmailVerified()) {
                 Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
                 LoginActivity.this.startActivity(myIntent);
             }
@@ -180,6 +197,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onStop() {
         super.onStop();
         hideProgressDialog();
+    }
+
+    private boolean isCoffeeShop () {
+        DocumentReference doc_ref = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+        doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Log.d(TAG, "Task is started ----------------");
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Task is succcesful ----------------");
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        check = (boolean) document.get("coffee_shop");
+                        access = (boolean) document.get("access");
+                    } else {
+                        Log.d(TAG, "No such document");
+                        return;
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                    return;
+                }
+            }
+        });
+        return check;
     }
 }
 

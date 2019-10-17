@@ -379,7 +379,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         WindowManager.LayoutParams wlp = window.getAttributes();
         wlp.gravity = Gravity.BOTTOM;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        wlp.y = 50;
+        wlp.y = 60;
         window.setAttributes(wlp);
         View view1 = inflater.inflate(R.layout.bottom_window, null);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);

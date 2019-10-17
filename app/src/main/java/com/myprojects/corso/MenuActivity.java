@@ -37,7 +37,6 @@ import java.util.Date;
 
 public class MenuActivity extends Activity implements View.OnClickListener {
     private Long monday, tuesday, wednesday, thursday, friday, sunday, saturday;
-    private Integer mon = 1, tue = 2, wed = 3, thu = 4, fri = 5, sat = 6, sun = 7;
     private BarChart chart;
     private ArrayList<BarEntry> BARENTRY;
     private ArrayList<String> BarEntryLabels;
@@ -112,40 +111,40 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         Calendar current_date = Calendar.getInstance();
         CollectionReference ref = db.collection("date_check");
         Log.d(TAG, "checkDate: " + ref);
-        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d(TAG, "onComplete: complete");
-                if (task.isSuccessful()) {
-                    if (task.getResult().getDocuments().size() > 0) {
-                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                        Timestamp date = (Timestamp) document.get("old_date");
-                        last_access_date = date.toDate();
-                        old_date.setTime(date.toDate());
-                        Integer this_day = current_date.get(Calendar.DAY_OF_MONTH);
-                        Integer old_day = old_date.get(Calendar.DAY_OF_MONTH);
-                        Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
-                        Integer old_week = old_date.get(Calendar.WEEK_OF_YEAR);
-                 if (old_day - this_day < 0 || this_day - old_day < 0) {
-                            coffee_display.setText("0");
-                            DocumentReference doc_date = db.collection("date_check").document("old_date");
-                            doc_date.update("old_date", current_date.getTime());
-                            DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("today", 0);
-                        }
-                 if(old_week - this_week < 0 ||this_week- old_week < 0) {
-                           DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("Monday", 0);
-                            doc_tracker.update("Tuesday", 0);
-                            doc_tracker.update("Wednesday", 0);
-                            doc_tracker.update("Thursday", 0);
-                            doc_tracker.update("Friday", 0);
-                            doc_tracker.update("Saturday", 0);
-                            doc_tracker.update("Sunday", 0);
-                 }
-                 updateDatabase();
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
+        ref.get().addOnCompleteListener(task -> {
+            Log.d(TAG, "onComplete: complete");
+            if (task.isSuccessful()) {
+                Log.d(TAG, "length is : " + task.getResult().getDocuments().size());
+                if (task.getResult().getDocuments().size() > 0) {
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    Timestamp date = (Timestamp) document.get("old_date");
+                    last_access_date = date.toDate();
+                    Log.d("access_date", "got int checkDate");
+                    old_date.setTime(date.toDate());
+                    Integer this_day = current_date.get(Calendar.DAY_OF_MONTH);
+                    Integer old_day = old_date.get(Calendar.DAY_OF_MONTH);
+                    Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
+                    Integer old_week = old_date.get(Calendar.WEEK_OF_YEAR);
+             if (old_day - this_day < 0 || this_day - old_day < 0) {
+                        coffee_display.setText("0");
+                        DocumentReference doc_date = db.collection("date_check").document("old_date");
+                        doc_date.update("old_date", current_date.getTime());
+                        DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                        doc_tracker.update("today", 0);
                     }
+             if(old_week - this_week < 0 ||this_week- old_week < 0) {
+                       DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                        doc_tracker.update("Monday", 0);
+                        doc_tracker.update("Tuesday", 0);
+                        doc_tracker.update("Wednesday", 0);
+                        doc_tracker.update("Thursday", 0);
+                        doc_tracker.update("Friday", 0);
+                        doc_tracker.update("Saturday", 0);
+                        doc_tracker.update("Sunday", 0);
+             }
+             updateDatabase();
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
@@ -163,6 +162,8 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         Calendar current_date = Calendar.getInstance();
         Calendar last_acces =  Calendar.getInstance();
         String day_in_week = findDay(current_date.get(Calendar.DAY_OF_WEEK));
+        Log.d("access_date", "got in updateDatabase");
+        if(last_access_date == null) checkDate();
         last_acces.setTime(last_access_date);
         Integer this_day = current_date.get(Calendar.DAY_OF_YEAR);
         Integer old_day = last_acces.get(Calendar.DAY_OF_YEAR);
@@ -180,8 +181,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
 
     private String findDay (Integer day){
         String day_name = new String();
-        Calendar current_date = Calendar.getInstance();
-        if(current_date.get(Calendar.DAY_OF_WEEK) == 2)day_name = "Monday";
+        if(day == 2)day_name = "Monday";
         else if(day == 3)day_name = "Tuesday";
         else if(day == 4)day_name = "Wednesday";
         else if(day == 5)day_name = "Thursday";

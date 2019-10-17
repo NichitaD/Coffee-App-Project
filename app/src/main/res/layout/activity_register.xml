@@ -148,7 +148,7 @@
         android:background="@drawable/button_google"
         android:fontFamily="@font/calibri_bold"
         android:paddingVertical="8dp"
-        android:text="SIGN IN WITH GOOGLE"
+        android:text="SIGN UP WITH GOOGLE"
         android:textAlignment="center"
         android:textColor="#F7F3F3"
         app:layout_constraintBottom_toTopOf="@+id/facebook"
@@ -160,17 +160,32 @@
         android:id="@+id/facebook"
         android:layout_width="320dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="50dp"
         android:background="@drawable/button_fb"
         android:fontFamily="@font/calibri_bold"
         android:paddingVertical="8dp"
-        android:text="SIGN IN WITH FACEBOOK"
+        android:text="SIGN UP WITH FACEBOOK"
         android:textAlignment="center"
         android:textColor="#F7F3F4"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/createCoffeeShop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/google" />
+
+    <Button
+        android:id="@+id/createCoffeeShop"
+        android:layout_width="320dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="37dp"
+        android:background="@drawable/button_back"
+        android:fontFamily="@font/calibri_bold"
+        android:onClick="onClick"
+        android:text="REGISTER AS COFFEE SHOP"
+        android:textColor="#FCF7FC"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

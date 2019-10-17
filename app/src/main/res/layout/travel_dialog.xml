@@ -13,84 +13,57 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="674dp"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="@font/calibri_bold"
         android:text="Travel by : "
         android:textColor="#01030C"
-        android:textSize="30sp"
+        android:textSize="35sp"
         app:layout_constraintBottom_toTopOf="@id/walk"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/walk"
+        style="?android:borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="#71a83a"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/by_foot"
         android:clickable="true"
         android:onClick="onClick"
-        style="?android:borderlessButtonStyle"
         app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text">
+        app:layout_constraintTop_toBottomOf="@id/text"></androidx.appcompat.widget.AppCompatImageButton>
 
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/by_foot" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/car"
+        style="?android:borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_below="@id/text"
-        android:backgroundTint="#f3c238 "
-        android:clickable="true"
-        android:onClick="onClick"
-        style="?android:borderlessButtonStyle"
-        app:cardCornerRadius="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="30dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/by_car"
+        android:onClick="onClick"
+        app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toStartOf="@id/walk"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text">
+        app:layout_constraintTop_toBottomOf="@+id/text"></androidx.appcompat.widget.AppCompatImageButton>
 
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/by_car" />
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/bike"
-        android:clickable="true"
-        android:onClick="onClick"
-        style="?android:borderlessButtonStyle"
-        app:cardCornerRadius="20dp"
-        android:backgroundTint="#377b63 "
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="40dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
+        android:background="@drawable/by_bike"
+        android:onClick="onClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/walk"
-        app:layout_constraintTop_toBottomOf="@+id/text">
-        <ImageView
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="5dp"
-            android:layout_width="73dp"
-            android:layout_height="73dp"
-            android:src="@drawable/by_bike"
-            />
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toBottomOf="@+id/text"></androidx.appcompat.widget.AppCompatImageButton>
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="20dp"
