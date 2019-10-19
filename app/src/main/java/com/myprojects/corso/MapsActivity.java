@@ -111,6 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Dialog dialog;
     private EditText review_text;
     private RatingBar rating_bar;
+    private TextView review_title;
 
 
     ///// Creating the map activity
@@ -420,9 +421,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.LENGTH_SHORT).show();
             } else {
                 LayoutInflater inflater = LayoutInflater.from(this);
-                final Dialog dialog3 = new Dialog(this);
+                final Dialog dialog3 = new Dialog(this, R.style.mydialog);
                 Window window = dialog3.getWindow();
                 WindowManager.LayoutParams wlp = window.getAttributes();
+                wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                wlp.height = WindowManager.LayoutParams.MATCH_PARENT;
                 wlp.gravity = Gravity.CENTER;
                 wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                 wlp.y = 50;
@@ -434,6 +437,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog = dialog3;
                 dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
                 dialog3.setContentView(view3);
+                review_title = dialog3.findViewById(R.id.review_title);
+                review_title.setText(current_clicked_marker.getTitle());
                 dialog3.show();
                 review_text = dialog3.findViewById(R.id.review);
                 rating_bar = dialog3.findViewById(R.id.ratingBar);
@@ -550,7 +555,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addInfoWindow(DirectionsLeg legs, Marker marker) {
         Log.d("INFO", "Changing snippet");
         marker.hideInfoWindow();
-        marker.setSnippet(legs.distance + " away");
+        marker.setSnippet("   " + legs.distance + " away");
         marker.showInfoWindow();
 
     }
@@ -706,6 +711,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         dialog.show();
     }
-
 }
 

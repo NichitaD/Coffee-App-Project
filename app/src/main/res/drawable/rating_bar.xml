@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <bitmap
+            android:src="@drawable/review_star"
+            android:tint="#80FF5555" />
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <bitmap
+            android:src="@drawable/review_star"
+            android:tint="@color/red" />
+    </item>
+    <item android:id="@android:id/progress">
+        <bitmap
+            android:src="@drawable/review_star"
+            android:tint="#FF5555" />
+    </item>
+</layer-list>

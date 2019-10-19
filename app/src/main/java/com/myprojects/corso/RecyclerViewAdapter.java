@@ -48,7 +48,7 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
         holder.review_content.setText(mReviews.get(position));
         if (mReviews.get(position) == ""){
             holder.review_content.setText("-User didn't leave a review-");
-            holder.review_content.setTextColor(Color.GRAY);
+            holder.review_content.setTextColor(Color.WHITE);
         }
         holder.rating_bar.setIsIndicator(true);
         Random rnd = new Random();
@@ -73,6 +73,5 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
             rating_bar = itemView.findViewById(R.id.ratingBar2);
             container = itemView.findViewById(R.id.container);
         }
-
     }
 }

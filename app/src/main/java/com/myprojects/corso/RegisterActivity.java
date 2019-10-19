@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             if(type == 1) {
                                 addToDatabase(user.getEmail());
                             } else {
-                                addCoffeeShop(user.getEmail());
+                                addCoffeeShop(user.getEmail(), nameRequestField.getText().toString());
                             }
                         } else {
                             Log.e(TAG, "sendEmailVerification", task.getException());
@@ -200,6 +200,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tracker.put("Friday",0);
         tracker.put("Saturday",0);
         tracker.put("Sunday",0);
+        tracker.put("today", 0);
         tracker.put("coffee_shop",false);
         tracker.put("access",true);
         db.collection("users").document(email)
@@ -218,10 +219,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
-    private void addCoffeeShop (String email){
+    private void addCoffeeShop (String email, String name){
         Map<String, Object>  tracker = new HashMap<>();
         tracker.put("access",false);
         tracker.put("coffee_shop",true);
+        tracker.put("name", name);
         db.collection("users").document(email)
                 .set(tracker)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

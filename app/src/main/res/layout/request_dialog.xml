@@ -22,6 +22,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
+        android:backgroundTint="@android:color/transparent"
         android:layout_width="320dp"
         android:layout_height="38dp"
         android:layout_marginTop="20dp"
@@ -59,6 +60,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
+        android:backgroundTint="@android:color/transparent"
         android:layout_width="320dp"
         android:layout_height="38dp"
         android:layout_marginTop="20dp"
@@ -94,6 +96,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
+        android:backgroundTint="@android:color/transparent"
         android:layout_width="320dp"
         android:layout_height="38dp"
         android:layout_marginTop="20dp"

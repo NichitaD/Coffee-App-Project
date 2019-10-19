@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,8 +30,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,6 +102,10 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         }
         if (button == R.id.stats) {
             openStats();
+        }
+        if (button == R.id.see_offers){
+            Intent intent = new Intent(MenuActivity.this, OffersActivity.class);
+            MenuActivity.this.startActivity(intent);
         }
     }
 
@@ -192,8 +195,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         return day_name;
     }
 
-
-
     private void setNumber() {
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -202,7 +203,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Long coffee_number = (Long) document.get("today");
+                        Long coffee_number = (Long)document.get("today");
                         coffees_drank_today = coffee_number.intValue();
                         coffee_display.setText(coffee_number.toString());
                         monday = (Long) document.get("Monday");
@@ -275,4 +276,5 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         BarEntryLabels.add("Saturday");
         BarEntryLabels.add("Sunday");
     }
+
 }

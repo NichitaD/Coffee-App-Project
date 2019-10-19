@@ -8,6 +8,14 @@
         <item name="android:windowAnimationStyle">@style/CustomActivityAnimation</item>
     </style>
 
+    <style name="MyRatingBarTwo" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bar</item>
+        <item name="colorControlNormal">@color/redish</item>
+        <item name="colorControlActivated">#c51162</item>
+    </style>
+
+    <style name="mydialog"></style>
+
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>

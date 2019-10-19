@@ -36,13 +36,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_login);
-        // Views
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
-        // Buttons
         findViewById(R.id.emailSignInButton).setOnClickListener(this);
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
-        //findViewById(R.id.skip).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
     }
@@ -50,35 +47,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-
-    private void createAccount(String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
-        if (!validateForm()) {
-            return;
-        }
-        showProgressDialog();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-                        hideProgressDialog();
-                    }
-                });
+        if(mAuth.getCurrentUser() == null)updateUI(mAuth.getCurrentUser());
+        else {isCoffeeShop();}
     }
 
     private void signIn(String email, String password) {
@@ -97,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         Toast.LENGTH_SHORT).show();
                             }else {
                                 Log.d(TAG, "signInWithEmail:success");
-                                updateUI(mAuth.getCurrentUser());
+                                isCoffeeShop();
                             }
                         } else {
                             // If sign in fails, display a message to the user.
@@ -148,8 +118,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         hideProgressDialog();
 
         if (user != null) {
-            if(isCoffeeShop()){
+            if(check == true){
+                Log.d(TAG, "updateUI: got after shop test =--------------------");
                 if(access == true){
+                    Log.d(TAG, "updateUI: got after access test -----------");
                     Intent myIntent = new Intent(LoginActivity.this, CoffeeShopActivity.class);
                     LoginActivity.this.startActivity(myIntent);
                 } else{
@@ -158,6 +130,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
             else if(user.isEmailVerified()) {
+                Log.d(TAG, "updateUI: moved to else if");
                 Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
                 LoginActivity.this.startActivity(myIntent);
             }
@@ -170,12 +143,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (i == R.id.emailCreateAccountButton) {
             Intent myIntent = new Intent(LoginActivity.this, RegisterActivity.class);
             LoginActivity.this.startActivity(myIntent);
-        } else if (i == R.id.emailSignInButton) {
+        }
+        if (i == R.id.emailSignInButton) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        }/* else if (i == R.id.skip) {
-            Intent myIntent = new Intent(LoginActivity.this, MenuActivity.class);
-            LoginActivity.this.startActivity(myIntent);
-        }*/
+        }
     }
 
     public void showProgressDialog() {
@@ -199,7 +170,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         hideProgressDialog();
     }
 
-    private boolean isCoffeeShop () {
+    private void isCoffeeShop () {
+        Log.d(TAG, "isCoffeeShop: called");
         DocumentReference doc_ref = db.collection("users").document(mAuth.getCurrentUser().getEmail());
         doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -211,8 +183,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (document.exists()) {
                         check = (boolean) document.get("coffee_shop");
                         access = (boolean) document.get("access");
+                        updateUI(mAuth.getCurrentUser());
                     } else {
                         Log.d(TAG, "No such document");
+                        updateUI(mAuth.getCurrentUser());
                         return;
                     }
                 } else {
@@ -221,7 +195,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
-        return check;
     }
 }
 
