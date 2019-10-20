@@ -14,6 +14,13 @@
         <item name="colorControlActivated">#c51162</item>
     </style>
 
+    <style name="FacebookLoginButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/button_fb</item>
+        <item name="android:height">35dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="mydialog"></style>
 
     <style name="DialogAnimation">
