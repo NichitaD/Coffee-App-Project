@@ -1,7 +1,11 @@
 package com.myprojects.corso;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class OffersActivity extends AppCompatActivity {
+public class OffersActivity extends AppCompatActivity{
 
     private static final String TAG = "OffersActivity";
     private ArrayList<Map> mapArray = new ArrayList<>();
@@ -27,6 +31,7 @@ public class OffersActivity extends AppCompatActivity {
     private ArrayList<String> mOffers = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private OfferRecyclerAdapter public_adapter;
+    private TextView title;
     private boolean event = false;
 
     @Override

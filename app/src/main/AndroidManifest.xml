@@ -21,7 +21,9 @@
                   android:label="@string/title_activity_maps">
         </activity>
         <activity android:name=".ReviewsActivity"></activity>
+        <activity android:name=".ShopOwnerActivity"></activity>
         <activity android:name=".CoffeeShopActivity"></activity>
+        <activity android:name=".SearchActivity"></activity>
         <activity android:name=".OffersActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

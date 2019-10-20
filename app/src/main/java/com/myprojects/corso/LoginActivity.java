@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -122,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG, "updateUI: got after shop test =--------------------");
                 if(access == true){
                     Log.d(TAG, "updateUI: got after access test -----------");
-                    Intent myIntent = new Intent(LoginActivity.this, CoffeeShopActivity.class);
+                    Intent myIntent = new Intent(LoginActivity.this, ShopOwnerActivity.class);
                     LoginActivity.this.startActivity(myIntent);
                 } else{
                     Toast.makeText(LoginActivity.this, "Your account has not been created yet!",

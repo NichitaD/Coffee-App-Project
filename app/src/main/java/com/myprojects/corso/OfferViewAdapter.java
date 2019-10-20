@@ -29,7 +29,6 @@ public class OfferViewAdapter  extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
         String name = shop_name;
         String offer = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(mContext);

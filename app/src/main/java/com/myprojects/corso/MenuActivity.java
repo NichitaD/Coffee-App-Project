@@ -3,9 +3,13 @@ package com.myprojects.corso;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +19,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.github.mikephil.charting.charts.BarChart;
@@ -30,6 +36,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -107,6 +118,25 @@ public class MenuActivity extends Activity implements View.OnClickListener {
             Intent intent = new Intent(MenuActivity.this, OffersActivity.class);
             MenuActivity.this.startActivity(intent);
         }
+        if (button == R.id.search){
+            ArrayList<String> arraylist = new ArrayList<>();
+            CollectionReference ref = db.collection("coffee_shops");
+            ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            arraylist.add((String)document.get("name"));
+                        }
+                        Intent intent = new Intent (MenuActivity.this, SearchActivity.class);
+                        intent.putExtra("list",arraylist);
+                        MenuActivity.this.startActivity(intent);
+                    } else {
+                        Log.d("Database_info", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
+        }
     }
 
     private void checkDate() {
@@ -175,6 +205,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         docRef.update(day_in_week,coffees_drank_today);
         Integer day_for_change;
         this_day = current_date.get(Calendar.DAY_OF_WEEK);
+        Log.d("saturday", "day dif is : "+ day_diffrence);
         for(day_for_change = this_day-1; day_diffrence > 1; --day_diffrence){
             if(day_for_change == 0) day_for_change = 7;
            docRef.update(findDay(day_for_change),0);
@@ -214,7 +245,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                         saturday = (Long) document.get("Saturday");
                         sunday = (Long) document.get("Sunday");
                         updateDatabase();
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -276,5 +306,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         BarEntryLabels.add("Saturday");
         BarEntryLabels.add("Sunday");
     }
+
 
 }

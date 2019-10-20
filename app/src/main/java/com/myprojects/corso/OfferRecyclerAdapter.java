@@ -1,15 +1,12 @@
 package com.myprojects.corso;
 
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public class OfferRecyclerAdapter extends RecyclerView.Adapter<OfferRecyclerAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "view_holde_called");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.offer_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.offer_item_owner, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }

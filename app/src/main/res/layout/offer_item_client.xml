@@ -27,29 +27,18 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp">
 
-            <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="39dp"
-                android:layout_height="39dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="4dp"
-                app:layout_constraintEnd_toStartOf="@id/offer_shop_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/stats_coffe" />
-
             <TextView
                 android:id="@+id/offer_shop_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
                 android:fontFamily="@font/calibri_bold"
                 android:text="Test Shop"
+                android:textAllCaps="true"
                 android:textColor="#0C0F1B"
                 android:textSize="26sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
@@ -62,16 +51,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/offer_shop_name">
-            <TextView
-                android:id="@+id/offer_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:fontFamily="@font/calibri_bold"
-                android:textSize="15sp"
-                android:text="This is just a preview, the acutual text will be inserted later"
-                android:textAlignment="center"
-                android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/offer_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:fontFamily="@font/calibri_bold"
+                    android:textSize="15sp"
+                    android:text="This is just a preview, the acutual text will be inserted later"
+                    android:textAlignment="center"
+                    android:textColor="@color/white" />
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

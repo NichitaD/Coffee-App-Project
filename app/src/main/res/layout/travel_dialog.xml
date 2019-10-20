@@ -15,6 +15,7 @@
         android:layout_marginBottom="674dp"
         android:fontFamily="@font/calibri_bold"
         android:text="Travel by : "
+        android:textAllCaps="true"
         android:textColor="#01030C"
         android:textSize="35sp"
         app:layout_constraintBottom_toTopOf="@id/walk"
