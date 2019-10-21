@@ -20,6 +20,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.facebook.login.Login;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,6 +94,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             addRequest(emailRequestField.getText().toString(), nameRequestField.getText().toString());
             Toast.makeText(RegisterActivity.this, "Request sent!",
                     Toast.LENGTH_SHORT).show();
+        }
+        if(i == R.id.facebook_register){
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            intent.putExtra("option","fb");
+            RegisterActivity.this.startActivity(intent);
+        }
+        if(i == R.id.google_register){
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            intent.putExtra("option","google");
+            RegisterActivity.this.startActivity(intent);
         }
     }
 
@@ -203,6 +216,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tracker.put("today", 0);
         tracker.put("coffee_shop",false);
         tracker.put("access",true);
+        tracker.put("last_access_time", Calendar.getInstance());
         db.collection("users").document(email)
                 .set(tracker)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

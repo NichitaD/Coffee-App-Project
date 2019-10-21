@@ -63,8 +63,8 @@ public class MenuActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkDate();
         mAuth = FirebaseAuth.getInstance();
+        checkDate();
         setContentView(R.layout.activity_menu);
         coffee_display = findViewById(R.id.coffee_display);
         setNumber();
@@ -141,27 +141,22 @@ public class MenuActivity extends Activity implements View.OnClickListener {
 
     private void checkDate() {
         Log.d(TAG, "checkDate: called");
+        last_access_date = LoginActivity.getDate();
+        Log.d(TAG, "checkDate: last date is " + last_access_date);
         Calendar current_date = Calendar.getInstance();
-        CollectionReference ref = db.collection("date_check");
-        Log.d(TAG, "checkDate: " + ref);
-        ref.get().addOnCompleteListener(task -> {
+        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+        docRef.get().addOnCompleteListener(task -> {
             Log.d(TAG, "onComplete: complete");
             if (task.isSuccessful()) {
-                Log.d(TAG, "length is : " + task.getResult().getDocuments().size());
-                if (task.getResult().getDocuments().size() > 0) {
-                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                    Timestamp date = (Timestamp) document.get("old_date");
-                    last_access_date = date.toDate();
-                    Log.d("access_date", "got int checkDate");
-                    old_date.setTime(date.toDate());
+                    old_date.setTime(last_access_date);
                     Integer this_day = current_date.get(Calendar.DAY_OF_MONTH);
                     Integer old_day = old_date.get(Calendar.DAY_OF_MONTH);
                     Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
                     Integer old_week = old_date.get(Calendar.WEEK_OF_YEAR);
              if (old_day - this_day < 0 || this_day - old_day < 0) {
                         coffee_display.setText("0");
-                        DocumentReference doc_date = db.collection("date_check").document("old_date");
-                        doc_date.update("old_date", current_date.getTime());
+                        DocumentReference doc_date = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                        doc_date.update("last_access_date", current_date.getTime());
                         DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
                         doc_tracker.update("today", 0);
                     }
@@ -179,9 +174,9 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-            }
         });
     }
+
     private  void incrementDatabase(){
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
         docRef.update("today", FieldValue.increment(1));

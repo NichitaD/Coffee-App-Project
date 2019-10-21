@@ -64,7 +64,6 @@
 
         <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
         <string name="emailpassword_title_text">Welcome to MOKKA!</string>
-
         <string name="passwordless_status_fmt">Email User: %1$s (verified: %2$b)</string>
         <string name="passwordless_title_text">Passwordless Sign In</string>
         <string name="status_email_not_sent">Send link to your email to get started.</string>
