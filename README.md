@@ -6,14 +6,18 @@ how to get there. It will also offer bartenders the possibility to organize
 small contests for the coffee drinkers, and all kinds of promotions. The
 difference between MOKKA and Google Maps is that it's tailored for people
 who are avid coffee drinkers. The users will be able to keep track of their
-coffee consumption, and always be informed about the latest promotions. 
-These are some things that I implemented in this project so far :
+coffee consumption, and always be informed about the latest promotions. This
+app is meant to become a social platform between coffee drinkers, and 
+coffee shops.
+These are some of the things that I implemented so far :
  - Google Directions API
  - Google Maps API
  - Firebase Authantification and Database (CloudStore)
+ - Facebook and Google authentication
  - Review and rating system
- - Coffee consuption track system
-
+ - Coffee consuption track system including statistics
+ - Diffrent interfaces for owner and client
+ - Offers posting system
 
 
 <p align="middle">
