@@ -40,6 +40,7 @@ These are some of the things that I implemented so far :
   <img src="https://user-images.githubusercontent.com/53866394/67204578-79b6ed00-f416-11e9-99c5-3330ec9448d8.png" width="260"/>
 </p>
 
+
 <p align="middle">
   <img src="https://user-images.githubusercontent.com/53866394/67204596-84718200-f416-11e9-8c56-6f02928528ea.png" width="260" hspace="12"/>
   <img src="https://user-images.githubusercontent.com/53866394/67204612-905d4400-f416-11e9-80fb-7b4a2efb18c0.png" width="260" hspace="12"/> 
