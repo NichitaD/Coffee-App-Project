@@ -38,6 +38,8 @@ public class OffersActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_list);
+        title = findViewById(R.id.title_review);
+        title.setText("LATEST OFFERS:");
         Log.d(TAG, "onCreate: started");
         setData();
     }

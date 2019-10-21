@@ -29,11 +29,14 @@ public class ReviewsActivity extends AppCompatActivity {
     private String marker_name;
     private TextView noReviews;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private TextView title;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_list);
+        title = findViewById(R.id.title_review);
+        title.setText("REVIEWS:");
         noReviews = findViewById(R.id.no_reviews);
         Log.d(TAG, "onCreate: started");
         Intent intent = getIntent();

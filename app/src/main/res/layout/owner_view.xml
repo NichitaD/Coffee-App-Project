@@ -17,7 +17,7 @@
         <ImageView
             android:layout_margin="5dp"
             android:id="@+id/shop_logo"
-            android:src="@drawable/captain_logo"
+            android:src="@drawable/narcoffee_roasters"
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/calibri_bold"
-            android:text="Your promotions :"
+            android:text="Your offers :"
             android:textAllCaps="true"
             android:textColor="#030203"
             android:textSize="20sp"

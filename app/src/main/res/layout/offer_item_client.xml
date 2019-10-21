@@ -34,7 +34,6 @@
                 android:layout_marginTop="14dp"
                 android:fontFamily="@font/calibri_bold"
                 android:text="Test Shop"
-                android:textAllCaps="true"
                 android:textColor="#0C0F1B"
                 android:textSize="26sp"
                 app:layout_constraintEnd_toEndOf="parent"
