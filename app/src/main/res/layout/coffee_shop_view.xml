@@ -18,7 +18,6 @@
         <ImageView
             android:id="@+id/coffee_name"
             android:gravity="center"
-            android:src="@drawable/narcoffee_roasters"
             android:layout_margin="5dp"
             android:layout_width="250dp"
             android:layout_height="100dp"

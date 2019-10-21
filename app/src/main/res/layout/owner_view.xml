@@ -17,7 +17,6 @@
         <ImageView
             android:layout_margin="5dp"
             android:id="@+id/shop_logo"
-            android:src="@drawable/narcoffee_roasters"
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -37,7 +36,7 @@
             android:layout_width="300dp"
             android:layout_height="32dp"
             android:layout_marginTop="36dp"
-            android:background="@drawable/coffee_bar"
+            android:background="@drawable/add_button"
             android:fontFamily="@font/calibri_bold"
             android:onClick="onClick"
             android:text="Add special offer"

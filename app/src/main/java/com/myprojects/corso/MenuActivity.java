@@ -3,24 +3,17 @@ package com.myprojects.corso;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.github.mikephil.charting.charts.BarChart;
@@ -29,7 +22,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,14 +30,12 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class MenuActivity extends Activity implements View.OnClickListener {
+
     private Long monday, tuesday, wednesday, thursday, friday, sunday, saturday;
     private BarChart chart;
     private ArrayList<BarEntry> BARENTRY;
@@ -283,6 +273,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         chart.setVisibleXRange(1, 4);
         dialog3.show();
     }
+
     public void AddValuesToBARENTRY(){
         BARENTRY.add(new BarEntry(monday, 0));
         BARENTRY.add(new BarEntry(tuesday, 1));
@@ -292,15 +283,14 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         BARENTRY.add(new BarEntry(saturday, 5));
         BARENTRY.add(new BarEntry(sunday, 6));
     }
+
     private void AddValuesToBarEntryLabels() {
         BarEntryLabels.add("Monday");
         BarEntryLabels.add("Tuesday");
-        BarEntryLabels.add("Wensday");
+        BarEntryLabels.add("Wednesday");
         BarEntryLabels.add("Thursday");
         BarEntryLabels.add("Friday");
         BarEntryLabels.add("Saturday");
         BarEntryLabels.add("Sunday");
     }
-
-
 }

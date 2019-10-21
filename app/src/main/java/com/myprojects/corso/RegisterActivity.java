@@ -65,7 +65,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             type = 1;
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
-
         if(i == R.id.createCoffeeShop){
             Log.d("Button", "called");
             LayoutInflater inflater = LayoutInflater.from(this);
@@ -171,7 +170,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else {
             mEmailField.setError(null);
         }
-
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             mPasswordField.setError("Required.");

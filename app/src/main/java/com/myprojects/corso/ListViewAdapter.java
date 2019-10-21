@@ -72,5 +72,4 @@ public class ListViewAdapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
-
 }

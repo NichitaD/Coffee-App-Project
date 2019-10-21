@@ -1,6 +1,6 @@
 package com.myprojects.corso;
 
-import android.content.Context;
+
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,7 +29,6 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
        mReviews = reviews;
        Log.d(TAG, "size :" + mEmails.size());
     }
-    
 
     @NonNull
     @Override
@@ -56,6 +54,7 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
         holder.container.setCardBackgroundColor(color);
 
     }
+
     @Override
     public int getItemCount() {
        return  mReviews.size();

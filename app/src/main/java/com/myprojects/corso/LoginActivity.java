@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -27,7 +26,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -35,14 +33,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         Intent intent = getIntent();
+        option = "";
         option = intent.getStringExtra("option");
         if(option != null){
             if(option.equals("fb")){
@@ -160,7 +154,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             mEmailField.setError(null);
         }
-
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             mPasswordField.setError("Required.");
@@ -173,7 +166,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
-
         if (user != null) {
             if(check == true){
                 Log.d(TAG, "updateUI: got after shop test =--------------------");
@@ -248,8 +240,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (document.exists()) {
                         check = (boolean) document.get("coffee_shop");
                         access = (boolean) document.get("access");
-                        Timestamp date = (Timestamp) document.get("last_access_date");
-                        last_access_date = date.toDate();
+                        if(check == false) {
+                            Timestamp date = (Timestamp) document.get("last_access_date");
+                            last_access_date = date.toDate();
+                        }
                         updateUI(mAuth.getCurrentUser());
                     } else {
                         Log.d(TAG, "No such document");
@@ -263,6 +257,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
     private void logWithFb(){
         LoginButton loginButton = findViewById(R.id.facebook_fake);
         loginButton.performClick();
@@ -274,13 +269,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
-
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
                 Toast.makeText(LoginActivity.this, "Facebook Login didn't work",Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
@@ -335,7 +328,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
     }
-
 
     private void logWithGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

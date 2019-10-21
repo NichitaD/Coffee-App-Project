@@ -29,24 +29,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.common.collect.Maps;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 import com.google.maps.model.TravelMode;
 import com.myprojects.corso.services.LocationTracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -163,7 +154,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMapToolbarEnabled(true);
         customizeMap(googleMap);
         mMap.setOnInfoWindowClickListener(this);
-
         if (mGeoApiContext == null) {
             mGeoApiContext = new GeoApiContext.Builder().
                     apiKey("AIzaSyAh_mnkmplWNTxhFwUAZuj-WqlZ-oMIn0s")
@@ -313,7 +303,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void startLocationService() {
         if (!isLocationServiceRunning()) {
             Intent serviceIntent = new Intent(this, LocationTracker.class);
-
             Log.d(TAG, " starting service");
             this.startService(serviceIntent);
         }
@@ -358,7 +347,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.mapstyle));
-
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
             }
@@ -505,7 +493,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         marker.hideInfoWindow();
         marker.setSnippet("   " + legs.distance + " away");
         marker.showInfoWindow();
-
     }
 
     //////Setting the view on the route

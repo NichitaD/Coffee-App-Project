@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -44,7 +42,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                         intent.putExtra("option", 3);
                         intent.putExtra("name", arraylist.get(position));
                         SearchActivity.this.startActivity(intent);
-
                     }
                 });
                 adb.show();
