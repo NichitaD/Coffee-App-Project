@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+ <TextView
+     android:id="@+id/title_review"
+     android:layout_width="match_parent"
+     android:layout_height="0dp"
+     android:layout_weight="1"
+     android:layout_gravity="center"
+     android:gravity="center"
+     android:text="LATEST OFFERS:"
+     android:textSize="24dp"
+     android:textColor="@color/black"
+     android:fontFamily="@font/calibri_bold"
+     ></TextView>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="8">
  <androidx.recyclerview.widget.RecyclerView
-     android:background="@color/redish"
+     android:background="@color/grey_100"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:id="@+id/recycler_view">
  </androidx.recyclerview.widget.RecyclerView>
 
-</RelativeLayout>
+ <TextView
+     android:id="@+id/no_reviews"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:textAllCaps="true"
+     android:textSize="25dp"
+     android:text="- NO reviews to show -"
+     android:gravity="center"
+     android:visibility="invisible"></TextView>
+ </RelativeLayout>
+
+</LinearLayout>

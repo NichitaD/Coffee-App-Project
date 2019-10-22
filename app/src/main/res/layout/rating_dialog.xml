@@ -1,75 +1,101 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginRight="40dp"
-    android:layout_marginLeft="40dp"
-    android:background="@drawable/travel_dialog_shape">
+    android:layout_height="match_parent"
+    android:background="@color/grey_100">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:background="@color/redish"
+        >
+        <ImageView
+            android:id="@+id/review_page_logo"
+            android:layout_margin="5dp"
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:src="@drawable/narcoffee_roasters"
+            android:layout_gravity="center"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:orientation="vertical">
+    <RatingBar
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:id="@+id/ratingBar"
+        style="@style/MyRatingBarTwo"
+        android:layout_width="224dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/review_card"
+            android:layout_width="341dp"
+            android:layout_height="145dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:backgroundTint="#cccc"
+            app:cardCornerRadius="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/review_done"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+            app:layout_constraintVertical_bias="0.082">
+
+            <EditText
+                android:id="@+id/review"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="#cccc"
+                android:gravity="top|left"
+
+                />
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/review_done"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/button_back"
+            android:fontFamily="@font/calibri_bold"
+            android:onClick="onClick"
+            android:text="Submit"
+            android:textColor="@color/grey_100"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/review_card" />
+
+        <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="sans-serif-black"
-        android:text="Leave a rating :"
-        android:textColor="#06121A"
+        android:layout_marginTop="40dp"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/ratingBar"
+        android:textAllCaps="true"
+        android:fontFamily="@font/calibri_bold"
+        android:text="Review your experience :"
+        android:textColor="#07080C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="57dp"
-        app:layout_constraintBottom_toTopOf="@id/review_card"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/review_card"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:backgroundTint="#E3EAFF"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/review_done"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingBar">
-
-        <EditText
-            android:id="@+id/review"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-
-            />
-    </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/review_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/button_back"
-        android:fontFamily="sans-serif-black"
-        android:text="DONE"
-        android:textColor="@color/grey_100"
-        android:onClick="onClick"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/review_card" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

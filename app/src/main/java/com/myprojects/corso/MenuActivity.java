@@ -22,22 +22,21 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class MenuActivity extends Activity implements View.OnClickListener {
+
     private Long monday, tuesday, wednesday, thursday, friday, sunday, saturday;
-    private Integer mon = 1, tue = 2, wed = 3, thu = 4, fri = 5, sat = 6, sun = 7;
     private BarChart chart;
     private ArrayList<BarEntry> BARENTRY;
     private ArrayList<String> BarEntryLabels;
@@ -54,8 +53,8 @@ public class MenuActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkDate();
         mAuth = FirebaseAuth.getInstance();
+        checkDate();
         setContentView(R.layout.activity_menu);
         coffee_display = findViewById(R.id.coffee_display);
         setNumber();
@@ -105,51 +104,69 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         if (button == R.id.stats) {
             openStats();
         }
+        if (button == R.id.see_offers){
+            Intent intent = new Intent(MenuActivity.this, OffersActivity.class);
+            MenuActivity.this.startActivity(intent);
+        }
+        if (button == R.id.search){
+            ArrayList<String> arraylist = new ArrayList<>();
+            CollectionReference ref = db.collection("coffee_shops");
+            ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            arraylist.add((String)document.get("name"));
+                        }
+                        Intent intent = new Intent (MenuActivity.this, SearchActivity.class);
+                        intent.putExtra("list",arraylist);
+                        MenuActivity.this.startActivity(intent);
+                    } else {
+                        Log.d("Database_info", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
+        }
     }
 
     private void checkDate() {
         Log.d(TAG, "checkDate: called");
+        last_access_date = LoginActivity.getDate();
+        Log.d(TAG, "checkDate: last date is " + last_access_date);
         Calendar current_date = Calendar.getInstance();
-        CollectionReference ref = db.collection("date_check");
-        Log.d(TAG, "checkDate: " + ref);
-        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d(TAG, "onComplete: complete");
-                if (task.isSuccessful()) {
-                    if (task.getResult().getDocuments().size() > 0) {
-                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                        Timestamp date = (Timestamp) document.get("old_date");
-                        last_access_date = date.toDate();
-                        old_date.setTime(date.toDate());
-                        Integer this_day = current_date.get(Calendar.DAY_OF_MONTH);
-                        Integer old_day = old_date.get(Calendar.DAY_OF_MONTH);
-                        Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
-                        Integer old_week = old_date.get(Calendar.WEEK_OF_YEAR);
-                 if (old_day - this_day < 0 || this_day - old_day < 0) {
-                            coffee_display.setText("0");
-                            DocumentReference doc_date = db.collection("date_check").document("old_date");
-                            doc_date.update("old_date", current_date.getTime());
-                            DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("today", 0);
-                        }
-                 if(old_week - this_week < 0 ||this_week- old_week < 0) {
-                           DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
-                            doc_tracker.update("Monday", 0);
-                            doc_tracker.update("Tuesday", 0);
-                            doc_tracker.update("Wednesday", 0);
-                            doc_tracker.update("Thursday", 0);
-                            doc_tracker.update("Friday", 0);
-                            doc_tracker.update("Saturday", 0);
-                            doc_tracker.update("Sunday", 0);
-                 }
-                 updateDatabase();
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
+        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+        docRef.get().addOnCompleteListener(task -> {
+            Log.d(TAG, "onComplete: complete");
+            if (task.isSuccessful()) {
+                    old_date.setTime(last_access_date);
+                    Integer this_day = current_date.get(Calendar.DAY_OF_MONTH);
+                    Integer old_day = old_date.get(Calendar.DAY_OF_MONTH);
+                    Integer this_week = current_date.get(Calendar.WEEK_OF_YEAR);
+                    Integer old_week = old_date.get(Calendar.WEEK_OF_YEAR);
+             if (old_day - this_day < 0 || this_day - old_day < 0) {
+                        coffee_display.setText("0");
+                        DocumentReference doc_date = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                        doc_date.update("last_access_date", current_date.getTime());
+                        DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                        doc_tracker.update("today", 0);
                     }
+             if(old_week - this_week < 0 ||this_week- old_week < 0) {
+                       DocumentReference doc_tracker = db.collection("users").document(mAuth.getCurrentUser().getEmail());
+                        doc_tracker.update("Monday", 0);
+                        doc_tracker.update("Tuesday", 0);
+                        doc_tracker.update("Wednesday", 0);
+                        doc_tracker.update("Thursday", 0);
+                        doc_tracker.update("Friday", 0);
+                        doc_tracker.update("Saturday", 0);
+                        doc_tracker.update("Sunday", 0);
+             }
+             updateDatabase();
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-            }
         });
     }
+
     private  void incrementDatabase(){
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
         docRef.update("today", FieldValue.increment(1));
@@ -163,6 +180,8 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         Calendar current_date = Calendar.getInstance();
         Calendar last_acces =  Calendar.getInstance();
         String day_in_week = findDay(current_date.get(Calendar.DAY_OF_WEEK));
+        Log.d("access_date", "got in updateDatabase");
+        if(last_access_date == null) checkDate();
         last_acces.setTime(last_access_date);
         Integer this_day = current_date.get(Calendar.DAY_OF_YEAR);
         Integer old_day = last_acces.get(Calendar.DAY_OF_YEAR);
@@ -171,6 +190,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         docRef.update(day_in_week,coffees_drank_today);
         Integer day_for_change;
         this_day = current_date.get(Calendar.DAY_OF_WEEK);
+        Log.d("saturday", "day dif is : "+ day_diffrence);
         for(day_for_change = this_day-1; day_diffrence > 1; --day_diffrence){
             if(day_for_change == 0) day_for_change = 7;
            docRef.update(findDay(day_for_change),0);
@@ -180,8 +200,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
 
     private String findDay (Integer day){
         String day_name = new String();
-        Calendar current_date = Calendar.getInstance();
-        if(current_date.get(Calendar.DAY_OF_WEEK) == 2)day_name = "Monday";
+        if(day == 2)day_name = "Monday";
         else if(day == 3)day_name = "Tuesday";
         else if(day == 4)day_name = "Wednesday";
         else if(day == 5)day_name = "Thursday";
@@ -192,8 +211,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         return day_name;
     }
 
-
-
     private void setNumber() {
         DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -202,7 +219,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Long coffee_number = (Long) document.get("today");
+                        Long coffee_number = (Long)document.get("today");
                         coffees_drank_today = coffee_number.intValue();
                         coffee_display.setText(coffee_number.toString());
                         monday = (Long) document.get("Monday");
@@ -213,7 +230,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                         saturday = (Long) document.get("Saturday");
                         sunday = (Long) document.get("Sunday");
                         updateDatabase();
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -257,6 +273,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         chart.setVisibleXRange(1, 4);
         dialog3.show();
     }
+
     public void AddValuesToBARENTRY(){
         BARENTRY.add(new BarEntry(monday, 0));
         BARENTRY.add(new BarEntry(tuesday, 1));
@@ -266,10 +283,11 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         BARENTRY.add(new BarEntry(saturday, 5));
         BARENTRY.add(new BarEntry(sunday, 6));
     }
+
     private void AddValuesToBarEntryLabels() {
         BarEntryLabels.add("Monday");
         BarEntryLabels.add("Tuesday");
-        BarEntryLabels.add("Wensday");
+        BarEntryLabels.add("Wednesday");
         BarEntryLabels.add("Thursday");
         BarEntryLabels.add("Friday");
         BarEntryLabels.add("Saturday");

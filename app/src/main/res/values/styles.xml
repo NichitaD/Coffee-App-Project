@@ -8,11 +8,27 @@
         <item name="android:windowAnimationStyle">@style/CustomActivityAnimation</item>
     </style>
 
+    <style name="MyRatingBarTwo" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bar</item>
+        <item name="colorControlNormal">@color/redish</item>
+        <item name="colorControlActivated">#c51162</item>
+    </style>
+
+    <style name="FacebookLoginButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/button_fb</item>
+        <item name="android:height">35dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="mydialog"></style>
+
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
-    <style name="ButtonStlye123" >
+
+    <style name="ButtonStlye123">
         <item name="android:textSize">19dp</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:padding">8dp</item>
@@ -29,39 +45,37 @@
     </style>
 
 
-        <!-- Activity with no Title -->
-        <style name="ThemeOverlay.MyNoTitleActivity" parent="AppTheme">
-            <item name="windowActionBar">false</item>
-            <item name="windowNoTitle">true</item>
-        </style>
+    <!-- Activity with no Title -->
+    <style name="ThemeOverlay.MyNoTitleActivity" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
 
+    <!-- Light EditTexts -->
+    <style name="ThemeOverlay.MyLightEditText" parent="ThemeOverlay.AppCompat.Dark" />
 
+    <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
-        <!-- Light EditTexts -->
-        <style name="ThemeOverlay.MyLightEditText" parent="ThemeOverlay.AppCompat.Dark"/>
+    <style name="ThemeOverlay.FirebaseIcon" parent="AppTheme">
+        <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
+    </style>
 
-        <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
-            <item name="android:layout_width">wrap_content</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:fadeScrollbars">true</item>
-            <item name="android:gravity">center</item>
-            <item name="android:maxLines">5</item>
-            <item name="android:padding">4dp</item>
-            <item name="android:scrollbars">vertical</item>
-            <item name="android:textSize">14sp</item>
-        </style>
+    <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">36sp</item>
+    </style>
 
-        <style name="ThemeOverlay.FirebaseIcon" parent="AppTheme">
-            <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
-            <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
-        </style>
-
-        <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
-            <item name="android:gravity">center</item>
-            <item name="android:textSize">36sp</item>
-        </style>
-
-    </resources>
+</resources>
 
 

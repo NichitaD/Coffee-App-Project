@@ -3,18 +3,18 @@ package com.myprojects.corso;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 
 public class ReviewsActivity extends AppCompatActivity {
@@ -24,12 +24,17 @@ public class ReviewsActivity extends AppCompatActivity {
     private ArrayList<String> mReviews = new ArrayList<>();
     private ArrayList<Long> mRatings = new ArrayList<>();
     private String marker_name;
+    private TextView noReviews;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private TextView title;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_list);
+        title = findViewById(R.id.title_review);
+        title.setText("REVIEWS:");
+        noReviews = findViewById(R.id.no_reviews);
         Log.d(TAG, "onCreate: started");
         Intent intent = getIntent();
         Log.d( "SpecialTag",intent.getStringExtra("marker"));
@@ -67,6 +72,9 @@ public class ReviewsActivity extends AppCompatActivity {
         Log.d(TAG, "size:" + mEmails.size());
         RecyclerViewAdapter adapter = new RecyclerViewAdapter( mEmails, mReviews, mRatings);
         recyclerView.setAdapter(adapter);
+        if(mEmails.isEmpty()){
+            noReviews.setVisibility(View.VISIBLE);
+        }else {noReviews.setVisibility(View.INVISIBLE);}
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

@@ -32,19 +32,12 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 import com.google.maps.model.TravelMode;
 import com.myprojects.corso.services.LocationTracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -111,6 +104,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Dialog dialog;
     private EditText review_text;
     private RatingBar rating_bar;
+    private TextView review_title;
+    private Marker receved_marker;
+    private String received_marker_name;
 
 
     ///// Creating the map activity
@@ -125,8 +121,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         Intent intent = getIntent();
         option = intent.getIntExtra("option", 123);
+        received_marker_name = intent.getStringExtra("name");
         Log.d("Intent_info", "Recieved option : " + option);
-        if (option == 2) {
+        if (option == 2 || option == 3 || option == 4) {
             setAllMarkers();
         }
         final ImageButton button = findViewById(R.id.reset);
@@ -157,7 +154,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMapToolbarEnabled(true);
         customizeMap(googleMap);
         mMap.setOnInfoWindowClickListener(this);
-
         if (mGeoApiContext == null) {
             mGeoApiContext = new GeoApiContext.Builder().
                     apiKey("AIzaSyAh_mnkmplWNTxhFwUAZuj-WqlZ-oMIn0s")
@@ -307,7 +303,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void startLocationService() {
         if (!isLocationServiceRunning()) {
             Intent serviceIntent = new Intent(this, LocationTracker.class);
-
             Log.d(TAG, " starting service");
             this.startService(serviceIntent);
         }
@@ -352,7 +347,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.mapstyle));
-
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
             }
@@ -373,86 +367,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onInfoWindowClick(Marker marker) {
         current_clicked_marker = marker;
+        Intent intent = new Intent(MapsActivity.this, CoffeeShopActivity.class);
+        intent.putExtra("name", current_clicked_marker.getTitle());
+        MapsActivity.this.startActivity(intent);
+    }
+
+    private void getDirectionDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
-        final Dialog dialog1 = new Dialog(this);
-        Window window = dialog1.getWindow();
+        final Dialog dialog2 = new Dialog(this);
+        Window window = dialog2.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
-        wlp.gravity = Gravity.BOTTOM;
+        wlp.gravity = Gravity.CENTER;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         wlp.y = 50;
         window.setAttributes(wlp);
-        View view1 = inflater.inflate(R.layout.bottom_window, null);
-        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog1.setContentView(view1);
-        TextView title = view1.findViewById(R.id.coffee_name);
-        title.setText(marker.getTitle());
-        RatingBar rating_bar = view1.findViewById(R.id.rating_bar);
-        dialog1.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        setRating(dialog1, rating_bar);
-        dialog = dialog1;
+        View view2 = inflater.inflate(R.layout.travel_dialog, null);
+        dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog = dialog2;
+        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog2.setContentView(view2);
+        dialog2.show();
     }
 
     @Override
     public void onClick(View view) {
         int button = view.getId();
-        if (button == R.id.directions_button) {
-            LayoutInflater inflater = LayoutInflater.from(this);
-            final Dialog dialog2 = new Dialog(this);
-            Window window = dialog2.getWindow();
-            WindowManager.LayoutParams wlp = window.getAttributes();
-            wlp.gravity = Gravity.CENTER;
-            wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-            wlp.y = 50;
-            window.setAttributes(wlp);
-            View view2 = inflater.inflate(R.layout.travel_dialog, null);
-            dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.dismiss();
-            dialog = dialog2;
-            dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-            dialog2.setContentView(view2);
-            dialog2.show();
-        }
-        if (button == R.id.rate_button) {
-            if (firebaseAuth.getCurrentUser() == null) {
-                Toast.makeText(MapsActivity.this, "You need to be logged in to leave a review!",
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                LayoutInflater inflater = LayoutInflater.from(this);
-                final Dialog dialog3 = new Dialog(this);
-                Window window = dialog3.getWindow();
-                WindowManager.LayoutParams wlp = window.getAttributes();
-                wlp.gravity = Gravity.CENTER;
-                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                wlp.y = 50;
-                window.setAttributes(wlp);
-                View view3 = inflater.inflate(R.layout.rating_dialog, null);
-                dialog3.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog3.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.dismiss();
-                dialog = dialog3;
-                dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                dialog3.setContentView(view3);
-                dialog3.show();
-                review_text = dialog3.findViewById(R.id.review);
-                rating_bar = dialog3.findViewById(R.id.ratingBar);
-                rating_bar.setStepSize(1);
-            }
-        }
-        if (button == R.id.review_done) {
-            Float rating = rating_bar.getRating();
-            String review = review_text.getText().toString();
-            String user = firebaseAuth.getCurrentUser().getEmail();
-            dialog.dismiss();
-            addReview(rating.intValue(), review, user);
-        }
-        if (button == R.id.see_reviews) {
-            dialog.dismiss();
-            Intent marker_intent = new Intent(MapsActivity.this, ReviewsActivity.class);
-            marker_intent.putExtra("marker", current_clicked_marker.getTitle());
-            MapsActivity.this.startActivity(marker_intent);
-        }
+
         if (button == R.id.walk) {
             calculateDirections(current_clicked_marker, 2);
             dialog.dismiss();
@@ -550,9 +491,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addInfoWindow(DirectionsLeg legs, Marker marker) {
         Log.d("INFO", "Changing snippet");
         marker.hideInfoWindow();
-        marker.setSnippet(legs.distance + " away");
+        marker.setSnippet("   " + legs.distance + " away");
         marker.showInfoWindow();
-
     }
 
     //////Setting the view on the route
@@ -560,7 +500,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void zoomRoute(List<LatLng> lstLatLngRoute) {
 
         if (mMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
-
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
         for (LatLng latLngPoint : lstLatLngRoute)
             boundsBuilder.include(latLngPoint);
@@ -578,12 +517,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ////// Reseting map
 
     private void resetMap(Polyline polilyne, Marker marker) {
-
         polilyne.remove();
         marker.hideInfoWindow();
         marker.setSnippet("Click to determine route");
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14f));
-
     }
 
     ///// Adding the markers from the database
@@ -591,7 +528,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setAllMarkers() {
         CollectionReference ref = db.collection("coffee_shops");
         ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -599,10 +535,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker_name = (String) document.get("name");
                         marker_geo_point = (GeoPoint) document.get("location");
                         Log.d("Marker_info", "Setting marker " + marker_name + " to " + marker_geo_point);
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(marker_geo_point.getLatitude(), marker_geo_point.getLongitude()))
+                        receved_marker = mMap.addMarker(new MarkerOptions().position(new LatLng(marker_geo_point.getLatitude(), marker_geo_point.getLongitude()))
                                 .icon(BitmapDescriptorFactory.fromBitmap(resizeBitmap("coffee", 100, 150)))
                                 .title(marker_name)
                                 .snippet(info));
+                        if (option == 3 && received_marker_name.equals(marker_name)) {
+                            onInfoWindowClick(receved_marker);
+                        }
+                        if (option == 4 && received_marker_name.equals(marker_name)) {
+                            current_clicked_marker = receved_marker;
+                            getDirectionDialog();
+                        }
                     }
                 } else {
                     Log.d("Database_info", "Error getting documents: ", task.getException());
@@ -641,71 +584,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-
-    private void addReview(Integer rating, String review, String user) {
-        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9']", "_");
-        DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
-        doc_ref.update("ratings_sum", FieldValue.increment(rating));
-        doc_ref.update("number_of_ratings", FieldValue.increment(1));
-        db.runTransaction(new Transaction.Function<Void>() {
-            @Override
-            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-                DocumentSnapshot snapshot = transaction.get(doc_ref);
-                ArrayList<String> reviewers = (ArrayList<String>) snapshot.get("reviewers");
-                ArrayList<String> reviews = (ArrayList<String>) snapshot.get("reviews");
-                ArrayList<Integer> reviewers_rating = (ArrayList<Integer>) snapshot.get("reviewers_rating");
-                Long update_rating = (Long) snapshot.get("ratings_sum") / (Long) snapshot.get("number_of_ratings");
-                Log.d("rating_update", "updated rating :" + update_rating);
-                reviewers.add(user);
-                reviews.add(review);
-                reviewers_rating.add(rating);
-                transaction.update(doc_ref, "reviewers", reviewers);
-                transaction.update(doc_ref, "reviewers_rating", reviewers_rating);
-                transaction.update(doc_ref, "reviews", reviews);
-                transaction.update(doc_ref, "rating", update_rating);
-                // Success
-                return null;
-            }
-        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Transaction success!");
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Transaction failure.", e);
-                    }
-                });
-    }
-
-    private void setRating(Dialog dialog, RatingBar ratingBar) {
-        String coffee_shop_id = current_clicked_marker.getTitle().toLowerCase().replaceAll("[^A-Za-z0-9']", "_");
-        Log.d("Test_name",coffee_shop_id);
-        DocumentReference doc_ref = db.collection("coffee_shops").document(coffee_shop_id);
-        doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Log.d(TAG, "Task is started ----------------");
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Task is succcesful ----------------");
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Long rating = (Long) document.get("rating");
-                        ratingBar.setRating(rating);
-                    } else {
-                        Log.d(TAG, "No such document");
-                        return;
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                    return;
-                }
-            }
-        });
-        dialog.show();
-    }
-
 }
-

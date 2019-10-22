@@ -2,73 +2,84 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/grey_100"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cardCornerRadius="15dp"
-        android:backgroundTint="@color/grey_100">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/avatar"
+                app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <RatingBar
                 android:id="@+id/ratingBar2"
+                style="?android:attr/ratingBarStyleIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginEnd="114dp"
                 android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/text_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView5"
+                app:layout_constraintTop_toBottomOf="@+id/review_email" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/text_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="10dp"
+                android:backgroundTint="@color/redish"
+                android:layout_margin="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_review"/>
-
+                app:layout_constraintTop_toBottomOf="@id/imageView5">
+                <TextView
+                    android:layout_margin="10dp"
+                    android:id="@+id/review_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="This is just a preview, the acutual review will be set later"
+                    android:textAlignment="center"
+                    android:textColor="@color/white" />
+            </androidx.cardview.widget.CardView>
             <TextView
                 android:id="@+id/review_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="91dp"
                 android:text="testy.mctester@gmail.com"
                 android:textColor="#0C0F1B"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/card_review"
+                app:layout_constraintBottom_toTopOf="@+id/ratingBar2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView5"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_review"
-                app:cardCornerRadius="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/rating_bar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/review_email"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="15dp"
-                android:backgroundTint="#d0dbff">
-
-            <TextView
-                android:id="@+id/review_content"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:text="This is just a preview, the acutual review will be set later"
-                android:textAlignment="center"
-                android:textColor="#201322"
-                android:layout_margin="10dp"
-                 />
-            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

@@ -54,16 +54,14 @@ public class LocationTracker extends Service {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     "My Channel",
                     NotificationManager.IMPORTANCE_DEFAULT);
-
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle("")
                     .setContentText("").build();
             startForeground(1, notification);
         }
-
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: called.");
@@ -76,7 +74,6 @@ public class LocationTracker extends Service {
         mLocationRequestHighAccuracy.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequestHighAccuracy.setInterval(UPDATE_INTERVAL);
         mLocationRequestHighAccuracy.setFastestInterval(FASTEST_INTERVAL);
-
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "getLocation: stopping the location service.");
@@ -108,5 +105,4 @@ public class LocationTracker extends Service {
         Log.d(TAG, "This is the updated location : " + location);
         return location;
     }
-
 }
