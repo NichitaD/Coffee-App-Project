@@ -38,8 +38,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 adb.setPositiveButton("Yes",  new AlertDialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent (SearchActivity.this, MapsActivity.class);
-                        intent.putExtra("option", 3);
+                        Intent intent = new Intent (SearchActivity.this, CoffeeShopActivity.class);
                         intent.putExtra("name", arraylist.get(position));
                         SearchActivity.this.startActivity(intent);
                     }

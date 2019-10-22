@@ -214,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tracker.put("today", 0);
         tracker.put("coffee_shop",false);
         tracker.put("access",true);
-        tracker.put("last_access_time", Calendar.getInstance());
+        tracker.put("last_access_date", Calendar.getInstance());
         db.collection("users").document(email)
                 .set(tracker)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

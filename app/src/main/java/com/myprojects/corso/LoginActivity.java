@@ -36,7 +36,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,7 +105,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 isCoffeeShop();
                             }
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             try {
                                 if (!mAuth.getCurrentUser().isEmailVerified()) {
@@ -360,6 +358,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
     }
+
     private void addToDatabase (FirebaseUser user) {
         Log.d(TAG, "add to data base" + user);
         DocumentReference docIdRef = db.collection("users").document(user.getEmail());
@@ -372,6 +371,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "Document exists!");
                         isCoffeeShop();
                     } else {
+                        Timestamp time = new Timestamp(new Date());
                         Map<String, Object> tracker = new HashMap<>();
                         tracker.put("Monday", 0);
                         tracker.put("Tuesday", 0);
@@ -383,7 +383,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         tracker.put("today", 0);
                         tracker.put("coffee_shop", false);
                         tracker.put("access", true);
-                        tracker.put("last_access_time", Calendar.getInstance());
+                        tracker.put("last_access_date", time);
                         db.collection("users").document(user.getEmail())
                                 .set(tracker)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
