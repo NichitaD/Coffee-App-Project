@@ -1,14 +1,6 @@
 # Mokka Project 
 
-   The users of this app will be able to see a map of all the
-coffee shops in their area and identify the one that's closest to them and
-how to get there. It will also offer bartenders the possibility to organize
-small contests for the coffee drinkers, and all kinds of promotions. The
-difference between MOKKA and Google Maps is that it's tailored for people
-who are avid coffee drinkers. The users will be able to keep track of their
-coffee consumption, and always be informed about the latest promotions. This
-app is meant to become a social platform between coffee drinkers, and 
-coffee shops.
+   Mokka is an app developed to serve as a platform between coffee shops and coffee drinkers. The users are able to see a map of all the coffee shops in their area and identify the one that's closest to them and how to get there. It also offers bartenders the possibility to organize contests for their clients and post all kinds of promotions. The users can also keep track of their coffee consumption, and always be informed about the latest promotions. Here are some things that I implemented in this project: the Google Directions API and the Google Maps API for the navigation feature, Firebase Authentication, Storage and Database, a review platform, a coffee consumption tracking system, and many others, all of these using the MVVM architecture, and Android Jetpack Architecture Components.
 These are some of the things that I implemented so far :
  - Google Directions API
  - Google Maps API
