@@ -1,4 +1,4 @@
-package com.myprojects.corso;
+package com.myprojects.corso.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.myprojects.corso.R;
+
 import java.util.ArrayList;
 
 public class OfferViewAdapter  extends ArrayAdapter<String> {

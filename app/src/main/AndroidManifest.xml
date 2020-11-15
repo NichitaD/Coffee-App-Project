@@ -9,22 +9,22 @@
         android:supportsRtl="true"
         android:label="MOKKA"
         android:theme="@style/AppTheme">
-        <activity android:name=".MenuActivity"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".views.MenuActivity"></activity>
+        <activity android:name=".views.RegisterActivity"></activity>
+        <activity android:name=".views.LoginActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
-        <activity android:name=".MapsActivity"
+        <activity android:name=".views.MapsActivity"
                   android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".ReviewsActivity"></activity>
-        <activity android:name=".ShopOwnerActivity"></activity>
-        <activity android:name=".CoffeeShopActivity"></activity>
-        <activity android:name=".SearchActivity"></activity>
-        <activity android:name=".OffersActivity"></activity>
+        <activity android:name=".views.ReviewsActivity"></activity>
+        <activity android:name=".views.ShopOwnerActivity"></activity>
+        <activity android:name=".views.CoffeeShopActivity"></activity>
+        <activity android:name=".views.SearchActivity"></activity>
+        <activity android:name=".views.OffersActivity"></activity>
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 

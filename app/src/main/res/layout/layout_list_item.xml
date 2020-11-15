@@ -48,28 +48,30 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/text_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="10dp"
-                android:backgroundTint="@color/redish"
+                android:layout_height="56dp"
                 android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/redish"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageView5">
+
                 <TextView
-                    android:layout_margin="10dp"
                     android:id="@+id/review_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:text="This is just a preview, the acutual review will be set later"
                     android:textAlignment="center"
                     android:textColor="@color/white" />
             </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/review_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="196dp"
+                android:layout_height="22dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginEnd="91dp"

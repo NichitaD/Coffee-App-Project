@@ -1,4 +1,4 @@
-package com.myprojects.corso;
+package com.myprojects.corso.views;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +36,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.myprojects.corso.R;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,7 +84,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        if(mAuth.getCurrentUser() == null)updateUI(mAuth.getCurrentUser());
+        if(mAuth.getCurrentUser() == null) {
+            updateUI(mAuth.getCurrentUser());
+        }
         else {isCoffeeShop();}
     }
 

@@ -1,4 +1,4 @@
-package com.myprojects.corso;
+package com.myprojects.corso.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,24 +7,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.myprojects.corso.R;
+import com.myprojects.corso.model.Offer;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class OfferRecyclerAdapter extends RecyclerView.Adapter<OfferRecyclerAdapter.ViewHolder> {
 
-    private static final String TAG = "OfferRecycleViewAdapter";
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mOffers = new ArrayList<>();
+    private ArrayList<Offer> mOffers;
 
-    public OfferRecyclerAdapter(ArrayList<String> names, ArrayList<String> offers) {
-        Log.d(TAG, "constructor called");
-        mNames = names;
+    public OfferRecyclerAdapter(ArrayList<Offer> offers) {
         mOffers = offers;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "view_holde_called");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.offer_item_owner, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
@@ -32,13 +32,13 @@ public class OfferRecyclerAdapter extends RecyclerView.Adapter<OfferRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.name.setText(mNames.get(position));
-        holder.offer_content.setText(mOffers.get(position));
+        holder.name.setText(mOffers.get(position).getCoffeeShop());
+        holder.offer_content.setText(mOffers.get(position).getText());
     }
 
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return mOffers.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

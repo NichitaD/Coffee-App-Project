@@ -1,4 +1,4 @@
-package com.myprojects.corso;
+package com.myprojects.corso.adapters;
 
 
 import android.graphics.Color;
@@ -11,23 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.myprojects.corso.R;
+import com.myprojects.corso.model.Review;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "RecycleViewAdapter";
-    private ArrayList<String> mEmails = new ArrayList<>();
-    private ArrayList<String> mReviews = new ArrayList<>();
-    private ArrayList<Long> mRatings = new ArrayList<>();
+    private ArrayList<Review> mReviews;
 
-    public RecyclerViewAdapter( ArrayList<String> emails, ArrayList<String> reviews,
-                              ArrayList<Long> ratings){
+    public RecyclerViewAdapter(ArrayList<Review> reviews){
        Log.d(TAG, "constructor called");
-       mEmails = emails;
-       mRatings = ratings;
        mReviews = reviews;
-       Log.d(TAG, "size :" + mEmails.size());
     }
 
     @NonNull
@@ -41,12 +39,13 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.email.setText(mEmails.get(position));
-        holder.rating_bar.setRating(mRatings.get(position).floatValue());
-        holder.review_content.setText(mReviews.get(position));
-        if (mReviews.get(position) == ""){
+        holder.email.setText((String) mReviews.get(position).getAuthor());
+        holder.rating_bar.setRating((Float)mReviews.get(position).getRating().floatValue());
+        if (mReviews.get(position).getText() == ""){
             holder.review_content.setText("-User didn't leave a review-");
             holder.review_content.setTextColor(Color.WHITE);
+        } else {
+            holder.review_content.setText(mReviews.get(position).getText());
         }
         holder.rating_bar.setIsIndicator(true);
         Random rnd = new Random();
